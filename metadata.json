@@ -1,0 +1,12 @@
+{
+    "name": "Trivy",
+    "provider": "Aqua Security.",
+    "icon": "trivy.svg",
+    "ui": {
+        "dashboard-tab": {
+            "title": "Trivy",
+            "root": "/ui",
+            "src": "index.html"
+        }
+    }
+}

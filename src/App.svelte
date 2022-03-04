@@ -348,7 +348,7 @@
                 <div class="title-label">{v.title}</div>
                 {#if v.fixedVersion !== ""}
                     <div class="fix-label">
-                        <div class="fix-version">Fixed Available</div>
+                        <div class="fix-version">Fix Available</div>
                     </div>
                 {/if}
             </button>

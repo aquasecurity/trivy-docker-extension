@@ -35,4 +35,4 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: aquasec/trivy-docker-extension
-          tags: aquasec/trivy-docker-extension:latest,aquasec/trivy-docker-extension:{{version}}
+          tags: aquasec/trivy-docker-extension:latest,aquasec/trivy-docker-extension:${GITHUB_REF##*/}

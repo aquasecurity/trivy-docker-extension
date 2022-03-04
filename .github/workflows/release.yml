@@ -1,0 +1,27 @@
+name: Publish extension
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish-extension:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      
+      - name: Run npm install
+        run: npm install
+
+      - name: Run npm build
+        run: npm run-script build
+      
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: aquasec/trivy-docker-extension
+          tag_with_ref: true

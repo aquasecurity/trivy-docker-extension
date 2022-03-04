@@ -17,11 +17,22 @@ jobs:
 
       - name: Run npm build
         run: npm run-script build
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+              myorg/myrepository
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha
       
       - name: Push to Docker Hub
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
+          platforms: linux/amd64,linux/arm64
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: aquasec/trivy-docker-extension
-          tag_with_ref: true
+          tags: aquasec/trivy-docker-extension:latest,aquasec/trivy-docker-extension:{{version}}

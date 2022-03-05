@@ -25,6 +25,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
+          image: |
+            aquasec/trivy-docker-extension
           tags: |
             type=semver,pattern={{version}}           
       

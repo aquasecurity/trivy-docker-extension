@@ -102,12 +102,18 @@
     border-radius: 4px;
     position: absolute;
     margin-left: 5px;
+    cursor: pointer;
+  }
+
+  button.scan:disabled {
+    cursor: not-allowed;
+    background-color: darkgray;
   }
 
   .select-editable {
     position: relative;
     border: solid grey 1px;
-    width: 400px;
+    width: 450px;
     height: 40px;
     display: inline-block;
   }
@@ -118,7 +124,7 @@
     left: 0px;
     font-size: 16px;
     height: 40px;
-    min-width: 400px;
+    min-width: 450px;
     border: none;
     width: 120px;
     padding-left: 4px;
@@ -133,7 +139,7 @@
     top: 0px;
     left: 0px;
     padding: 1px;
-    min-width: 360px;
+    min-width: 400px;
     height: 38px;
     font-size: 16px;
     border: none;

@@ -26,7 +26,6 @@ jobs:
             aquasec/trivy-docker-extension
           tags: |
             type=semver,pattern={{version}}     
-          
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1

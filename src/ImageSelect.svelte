@@ -113,6 +113,7 @@
     min-width: 400px;
     border: none;
     width: 120px;
+    padding-left: 4px;
     margin: 0;
     background: url(./images/br_down.png) no-repeat #fff;
     -webkit-appearance: none;

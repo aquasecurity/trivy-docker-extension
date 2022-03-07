@@ -20,7 +20,7 @@
 </script>
 
 <div class="severity-buttons">
-  {#if all > 0}<div
+  {#if all > 1}<div
       class="severity-button {selected === 'all' ? 'selected' : ''}"
       on:click={() => filterSeverity("all")}
     >

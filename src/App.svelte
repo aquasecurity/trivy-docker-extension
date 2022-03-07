@@ -16,6 +16,7 @@
   let allVulnerabilities = [];
   let vulnerabilities = [];
   let noErrors = false;
+  let disableButton = false;
 
   class TrivyVulnerability {
     constructor(v) {
@@ -85,6 +86,7 @@
     resetCounters();
 
     var loadingOverlay = document.querySelector(".loading");
+    loadingOverlay.classList.remove("hidden");
 
     if (!(await checkForCacheVolume())) {
       await createCacheVolume().then((created) => {
@@ -98,7 +100,6 @@
         `Creating vulnerability cache volume on first run, populating this will cause a slight delay.`
       );
     }
-    loadingOverlay.classList.remove("hidden");
 
     let stdout = "";
     let stderr = "";
@@ -130,7 +131,9 @@
             );
             console.error(error);
           },
+
           onClose(exitCode) {
+            disableButton = false;
             document.querySelector(".loading").classList.add("hidden");
             if (exitCode === 0) {
               window.ddClient.desktopUI.toast.success(
@@ -240,7 +243,7 @@
 <main>
   <div class="header">
     <img src="./build/images/trivy.svg" alt="Trivy Logo" height="120px" />
-    <ImageSelect on:startscan={triggerTrivy} />
+    <ImageSelect bind:disableButton on:startscan={triggerTrivy} />
   </div>
 
   <Loading />

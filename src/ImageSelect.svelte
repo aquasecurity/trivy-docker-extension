@@ -7,6 +7,8 @@
 
   let imagesPromise = getImages();
 
+  export let disableButton = false;
+
   async function getImages() {
     let images = [];
     try {
@@ -42,6 +44,7 @@
   }
 
   function startScan() {
+    disableButton = true;
     dispatch("startscan", {
       image: selected,
     });
@@ -73,7 +76,12 @@
     />
   </div>
 
-  <button class="scan" on:click={startScan}>Scan</button>
+  <button
+    id="scanbtn"
+    class="scan"
+    disabled={disableButton}
+    on:click={startScan}>Scan</button
+  >
 </div>
 
 <style>

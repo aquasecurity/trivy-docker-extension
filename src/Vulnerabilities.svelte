@@ -23,7 +23,12 @@
     </div>
     <div class="id-label">{v.id}</div>
 
-    <div class="title-label">{v.title}</div>
+    {#if v.title}
+      <div class="title-label">{v.title}</div>
+    {:else}
+      <div class="title-label">{v.pkgName}</div>
+    {/if}
+
     {#if v.fixedVersion !== ""}
       <div class="fix-label">
         <div class="fix-version">Fix Available</div>
@@ -118,7 +123,6 @@
     display: flex;
     border: none;
   }
-
 
   .detailheading {
     font-weight: bold;

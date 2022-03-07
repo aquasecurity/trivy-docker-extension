@@ -19,3 +19,7 @@ dev-debug:
 .PHONY: dev-reset
 dev-reset:
 	@docker extension dev reset trivy-docker-extension:development
+
+.PHONY: remove-dev
+remove-dev:
+	@docker extension rm trivy-docker-extension:development || true

@@ -50,6 +50,24 @@
     }
   };
 
+  async function checkForCacheVolume() {
+    var exists = false;
+    await window.ddClient.docker.cli
+      .exec("volume", [
+        "ls",
+        "-f",
+        "name=trivy-docker-extension-cache",
+        "--format='{{json .}}'",
+      ])
+      .then((result) => {
+        console.log(result);
+        if (result.stdout !== "") {
+          exists = true;
+        }
+      });
+    return exists;
+  }
+
   async function createCacheVolume() {
     var success = true;
     await window.ddClient.docker.cli
@@ -67,15 +85,20 @@
     resetCounters();
 
     var loadingOverlay = document.querySelector(".loading");
-    loadingOverlay.classList.remove("hidden");
 
-    await createCacheVolume().then((created) => {
-      if (!created) {
-        loadingOverlay.classList.add("hidden");
-        console.log("failed to create volume");
-        return;
-      }
-    });
+    if (!(await checkForCacheVolume())) {
+      await createCacheVolume().then((created) => {
+        if (!created) {
+          loadingOverlay.classList.add("hidden");
+          console.log("failed to create volume");
+          return;
+        }
+      });
+      window.ddClient.desktopUI.toast.warning(
+        `Creating vulnerability cache volume on first run, populating this will cause a slight delay.`
+      );
+    }
+    loadingOverlay.classList.remove("hidden");
 
     let stdout = "";
     let stderr = "";
@@ -254,12 +277,9 @@
     background-color: #e6eaec;
   }
 
-
-
   @media (min-width: 640px) {
     main {
       max-width: none;
     }
   }
-
 </style>

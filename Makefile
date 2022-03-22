@@ -1,11 +1,17 @@
+IMAGE?=aquasec/trivy-docker-extension
+TAG?=latest
+
+BUILDER=buildx-multi-arch
+
+
 
 .PHONY: build-app
 build-app:
 	@npm run-script build
 
 .PHONY: build-dev
-build-dev: build-app
-	@docker build -t trivy-docker-extension:development .
+build-dev:
+	@DOCKER_BUILDKIT=1 docker build -t trivy-docker-extension:development .
 
 .PHONY: deploy-dev
 deploy-dev: build-dev
@@ -23,3 +29,11 @@ dev-reset:
 .PHONY: remove-dev
 remove-dev:
 	@docker extension rm trivy-docker-extension:development || true
+
+.PHONY: prepare-buildx
+prepare-buildx: ## Create buildx builder for multi-arch build, if not exists
+	docker buildx inspect $(BUILDER) || docker buildx create --name=$(BUILDER) --driver=docker-container --driver-opt=network=host
+
+.PHONY: release-extension
+release-extension: prepare-buildx
+	@docker buildx build --push --builder=$(BUILDER) --platform=linux/amd64,linux/arm64 --build-arg TAG=$(TAG) --tag=$(IMAGE):$(TAG) .

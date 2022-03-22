@@ -11,6 +11,10 @@ The user can either select from a drop down of local images or type the name of 
 ![Screenshot](.github/images/screenshot.png)
 
 
+When you run the scan you'll get the results
+
+![Screenshot Results](.github/images/screenshot_results.png)
+
 ## What is is made of?
 
 The extension runs in its own container with a web interface that calls into the Docker extension API. At a high level the flow is;

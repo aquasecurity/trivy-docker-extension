@@ -10,6 +10,8 @@ The user can either select from a drop down of local images or type the name of 
 
 ![Screenshot](.github/images/screenshot.png)
 
+![Screenshot - Light Theme](.github/images/screenshot_light.png)
+
 
 When you run the scan you'll get the results
 

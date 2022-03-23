@@ -82,16 +82,17 @@ export function App() {
     var exists = false;
     await window.ddClient.docker.cli
       .exec("volume", [
-        "ls",
-        "-f",
-        "name=trivy-docker-extension-cache",
-        "--format='{{json .}}'",
+        "inspect",
+        "trivy-docker-extension-cache"
       ])
       .then((result: any) => {
         console.log(result);
         if (result.stdout !== "") {
           exists = true;
         }
+      }).catch((err: Error) => {
+        console.log(err);
+        exists = false;
       });
     return exists;
   }
@@ -205,6 +206,7 @@ export function App() {
     if (results.Results === undefined) {
       setVulnerabilities([]);
       setShowFilter("none");
+      setShowSuccess("block");
       return;
     }
     for (let i = 0; i < results.Results.length; i++) {
@@ -254,6 +256,7 @@ export function App() {
 
 
     if (all === 0) {
+      console.debug("No results, showing the success screen");
       setShowSuccess("block");
       setShowFilter("none");
     } else {

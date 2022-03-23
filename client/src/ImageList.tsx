@@ -82,6 +82,26 @@ export function ImageList(props: any) {
         setFixedOnly(!fixedOnly);
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        switch (event.key) {
+            case "Tab": {
+                handleChange(event, props.scanImage);
+                break;
+            }
+            default:
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<{}>, obj: string) => {
+        setDisableScan(true);
+        props.imageUpdated();
+        if (obj && obj !== "No images found") {
+            props.setScanImage(obj);
+            setDisableScan(false);
+        }
+    }
+
+
 
     return (
         <Box>
@@ -105,14 +125,8 @@ export function ImageList(props: any) {
                             {...params}
                             placeholder="Scan Image"
                         />)}
-                    onChange={(e, obj) => {
-                        setDisableScan(true);
-                        props.imageUpdated();
-                        if (obj && obj !== "No images found") {
-                            props.setScanImage(obj);
-                            setDisableScan(false);
-                        }
-                    }}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                 />
                 <Button sx={{ marginLeft: '3px' }}
                     variant="contained"

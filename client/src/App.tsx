@@ -384,7 +384,8 @@ export function App() {
               </Typography>
 
               <Typography variant="h5" sx={{ marginTop: '2rem' }}>
-                Select from one of your locally installed images or simply type the name of the remote image you wish to scan
+                Select from one of your locally installed images or simply type the name of the remote image you wish to scan. <br />
+                Scans run locally, nothing leaves your machine.
               </Typography>
               <Box sx={{ marginTop: '3rem' }}>
                 <ImageList

@@ -41,6 +41,8 @@ export function Welcome(props: any) {
                             setScanImage={props.setScanImage}
                             runScan={props.runScan}
                             imageUpdated={props.imageUpdated}
+                            fixedOnly={props.fixedOnly}
+                            setFixedOnly={props.setFixedOnly}
                         />
                     </Box>
                 </CardContent>

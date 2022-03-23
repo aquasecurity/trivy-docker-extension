@@ -10,7 +10,6 @@ import React from 'react';
 export function ImageList(props: any) {
     const [open, setOpen] = React.useState(false);
     const [disableScan, setDisableScan] = React.useState(true);
-    const [fixedOnly, setFixedOnly] = React.useState(true);
     const [images, setImages] = React.useState<string[]>([]);
     const loading = open && images !== undefined && images.length === 0;
     const ignoredImages = ["aquasec/trivy", "trivy-docker-extension"];
@@ -73,11 +72,11 @@ export function ImageList(props: any) {
         // disable the scan button as a priority
         setDisableScan(true);
         // run the scan 
-        props.runScan(fixedOnly);
+        props.runScan();
     }
 
     const toggleFixedOnly = () => {
-        setFixedOnly(!fixedOnly);
+        props.setFixedOnly(!props.fixedOnly);
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -132,7 +131,7 @@ export function ImageList(props: any) {
                 </Button>
             </Box>
             <FormGroup>
-                <FormControlLabel control={<Switch checked={fixedOnly} onClick={toggleFixedOnly} />} label="Only show vulnerabilities that have fixes" />
+                <FormControlLabel control={<Switch checked={props.fixedOnly} onClick={toggleFixedOnly} />} label="Only show vulnerabilities that have fixes" />
             </FormGroup>
         </Box>
     );

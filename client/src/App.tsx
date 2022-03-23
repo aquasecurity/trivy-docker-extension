@@ -16,6 +16,7 @@ export function App() {
   const [critical, setCritical] = React.useState(0);
   const [high, setHigh] = React.useState(0);
   const [medium, setMedium] = React.useState(0);
+  const [fixedOnly, setFixedOnly] = React.useState(true);
   const [low, setLow] = React.useState(0);
   const [unknown, setUnknown] = React.useState(0);
   const [showFilter, setShowFilter] = React.useState("none");
@@ -76,7 +77,7 @@ export function App() {
     return success;
   }
 
-  async function triggerTrivy(fixedOnly: boolean) {
+  async function triggerTrivy() {
     resetCounters();
     if (!(await checkForCacheVolume())) {
       await createCacheVolume().then((created) => {
@@ -206,7 +207,7 @@ export function App() {
 
     vulns.sort((a, b) => {
       if (getSeverityOrdering(a.severity) === getSeverityOrdering(b.severity)) {
-        return a.id >= b.id ? 1 : -1;
+        return a.pkgName >= b.pkgName ? 1 : -1;
       }
       return getSeverityOrdering(a.severity) >= getSeverityOrdering(b.severity)
         ? 1
@@ -224,11 +225,11 @@ export function App() {
     setVulnerabilities(vulns);
   }
 
-  const runScan = (fixedOnly: boolean) => {
+  const runScan = () => {
     setLoadingWait(true);
     setShowDefaultDisplay("block");
     setShowWelcome("none");
-    triggerTrivy(fixedOnly);
+    triggerTrivy();
   }
 
   const resetCounters = () => {
@@ -268,6 +269,8 @@ export function App() {
           showWelcome={showWelcome}
           scanImage={scanImage}
           setScanImage={setScanImage}
+          fixedOnly={fixedOnly}
+          setFixedOnly={setFixedOnly}
           runScan={runScan}
           imageUpdated={imageUpdated}
         />
@@ -276,6 +279,8 @@ export function App() {
           showDefaultDisplay={showDefaultDisplay}
           scanImage={scanImage}
           setScanImage={setScanImage}
+          fixedOnly={fixedOnly}
+          setFixedOnly={setFixedOnly}
           runScan={runScan}
           imageUpdated={imageUpdated}
         />

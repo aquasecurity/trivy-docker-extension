@@ -23,11 +23,12 @@ export function Pill(props: any) {
             sx={{
                 borderRadius: '4px',
                 fontSize: '.8rem',
-                fontWeight: 500,
+                fontWeight: 600,
                 padding: '2px',
                 width: '100px',
                 minWidth: '100px',
                 bgcolor: getSeverity(props.item.severity),
+                color: 'white',
                 marginRight: '1rem',
             }} />
     )

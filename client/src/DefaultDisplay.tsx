@@ -9,7 +9,7 @@ export function DefaultDisplay(props: any) {
 
     return (
         <Box sx={{ display: props.showDefaultDisplay, marginTop: '2rem' }}>
-            <Box sx={{ m: '2rem' }}>
+            <Box sx={{ m: '2rem', marginBottom: '1rem' }}>
                 <Links />
                 <Box sx={{ display: 'flex' }}>
                     <img src="images/trivy_logo.svg" alt="Trivy Logo" height="100px" />
@@ -29,6 +29,8 @@ export function DefaultDisplay(props: any) {
                     setScanImage={props.setScanImage}
                     runScan={props.runScan}
                     imageUpdated={props.imageUpdated}
+                    fixedOnly={props.fixedOnly}
+                    setFixedOnly={props.setFixedOnly}
                 />
             </Box>
         </Box>)

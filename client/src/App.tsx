@@ -109,7 +109,6 @@ export function App() {
     return success;
   }
 
-
   function runScan(fixedOnly: boolean) {
     setLoadingWait(true);
     setDisplayStandard("block");

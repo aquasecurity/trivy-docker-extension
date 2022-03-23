@@ -78,7 +78,6 @@ export function App() {
 
   async function triggerTrivy(fixedOnly: boolean) {
     resetCounters();
-
     if (!(await checkForCacheVolume())) {
       await createCacheVolume().then((created) => {
         if (!created) {
@@ -110,8 +109,6 @@ export function App() {
       commandParts.push("--ignore-unfixed");
     }
     commandParts.push(scanImage);
-    console.log(commandParts);
-
     ({ stdout, stderr } = await runTrivy(commandParts, stdout, stderr));
   }
 
@@ -132,7 +129,6 @@ export function App() {
             );
             console.error(error);
           },
-
           onClose(exitCode: number) {
             setLoadingWait(false);
             if (exitCode === 0) {
@@ -152,7 +148,6 @@ export function App() {
     );
     return { stdout, stderr };
   }
-
 
   const processResult = (res: any) => {
     let all = 0;
@@ -218,8 +213,6 @@ export function App() {
         : -1;
     });
 
-
-
     if (all === 0) {
       console.debug("No results, showing the success screen");
       setShowSuccess("block");
@@ -227,12 +220,8 @@ export function App() {
     } else {
       setShowFilter("block");
     }
-
     setAllVulnerabilities(vulns);
     setVulnerabilities(vulns);
-    if (vulnerabilities.length === 0) {
-      //noErrors = true;
-    }
   }
 
   const runScan = (fixedOnly: boolean) => {
@@ -276,7 +265,7 @@ export function App() {
         <CssBaseline />
         {/* Entry point to the extension - large hero with description and scan box */}
         <Welcome
-          displayWelcome={showWelcome}
+          showWelcome={showWelcome}
           scanImage={scanImage}
           setScanImage={setScanImage}
           runScan={runScan}

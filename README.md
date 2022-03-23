@@ -17,6 +17,8 @@ When you run the scan you'll get the results
 
 ![Screenshot Results](.github/images/screenshot_results.png)
 
+![Screenshot Results - Light Theme](.github/images/screenshot_results_light.png)
+
 ## What is is made of?
 
 The extension runs in its own container with a web interface that calls into the Docker extension API. At a high level the flow is;

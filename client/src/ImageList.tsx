@@ -1,19 +1,19 @@
-import React from 'react';
-import Button from "@mui/material/Button";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
+import React from 'react';
 
 export function ImageList(props: any) {
     const [open, setOpen] = React.useState(false);
-
     const [disableScan, setDisableScan] = React.useState(true);
     const [fixedOnly, setFixedOnly] = React.useState(true);
     const [images, setImages] = React.useState<string[]>([]);
     const loading = open && images !== undefined && images.length === 0;
+    const ignoredImages = ["aquasec/trivy", "trivy-docker-extension"];
 
     React.useEffect(() => {
         let active = true;
@@ -40,9 +40,7 @@ export function ImageList(props: any) {
         }
     }, [open]);
 
-    const ignoredImages = ["aquasec/trivy", "trivy-docker-extension"];
-
-    function loadImages() {
+    const loadImages = () => {
         let images = [];
         try {
             images = window.ddClient.docker.listImages();
@@ -71,14 +69,14 @@ export function ImageList(props: any) {
         })
     }
 
-    function runScan() {
+    const runScan = () => {
         // disable the scan button as a priority
         setDisableScan(true);
         // run the scan 
         props.runScan(fixedOnly);
     }
 
-    function toggleFixedOnly() {
+    const toggleFixedOnly = () => {
         setFixedOnly(!fixedOnly);
     }
 
@@ -100,8 +98,6 @@ export function ImageList(props: any) {
             setDisableScan(false);
         }
     }
-
-
 
     return (
         <Box>

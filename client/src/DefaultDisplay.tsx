@@ -1,13 +1,14 @@
-import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import { Links } from "./Links";
-import { ImageList } from "./ImageList";
+import { Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { ImageList } from './ImageList';
+import { Links } from './Links';
 
 
 export function DefaultDisplay(props: any) {
 
     return (
-        <Box sx={{ display: props.displayStandard, marginTop: '2rem' }}>
+        <Box sx={{ display: props.showDefaultDisplay, marginTop: '2rem' }}>
             <Box sx={{ m: '2rem' }}>
                 <Links />
                 <Box sx={{ display: 'flex' }}>

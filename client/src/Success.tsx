@@ -5,7 +5,7 @@ import { Box } from "@mui/system";
 
 export function Success(props: any) {
     return (
-        <Box sx={{ minWidth: 275, m: '10rem', p: '2rem', marginTop: '5rem', textAlign: 'center', display: props.showSuccess }}>
+        <Box sx={{ minWidth: 275, m: '4rem', p: '2rem', textAlign: 'center', display: props.showSuccess }}>
             <Card>
                 <CardContent>
 

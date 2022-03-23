@@ -40,7 +40,10 @@ export function Vulns(props: any) {
 
                 {v.map((row: { id: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; title: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; description: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; pkgName: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; installedVersion: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; fixedVersion: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; primaryURL: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; }) => (
                     <Accordion>
-                        <AccordionSummary sx={{ overflowX: 'hidden' }} expandIcon={<ExpandMoreIcon />}>
+                        <AccordionSummary
+                            sx={{ overflowX: 'hidden' }}
+                            expandIcon={<ExpandMoreIcon />}
+                        >
                             <Pill item={row} />
 
                             <Typography sx={{ width: '16%', minWidth: '120px', flexShrink: 0, m: '0.35rem' }}>

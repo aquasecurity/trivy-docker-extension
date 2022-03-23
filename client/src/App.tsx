@@ -1,21 +1,13 @@
-
-import CssBaseline from '@mui/material/CssBaseline';
 import { DockerMuiThemeProvider } from '@docker/docker-mui-theme';
-import { Box } from '@mui/system';
-import { ImageList } from './ImageList';
+import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
+
+import { DefaultDisplay } from './DefaultDisplay';
 import { Loading } from './Loading';
-import ToggleButton from '@mui/material/ToggleButton';
-import Card from '@mui/material/Card';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Success } from './Success';
+import { TrivyVulnerability } from './TrivyVulnerability';
 import { Vulns } from './Vulns';
-import { Links } from './Links';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-
-
+import { Welcome } from './Welcome';
 
 export function App() {
 
@@ -28,39 +20,13 @@ export function App() {
   const [unknown, setUnknown] = React.useState(0);
   const [showFilter, setShowFilter] = React.useState("none");
   const [showSuccess, setShowSuccess] = React.useState("none");
-  const [displayStandard, setDisplayStandard] = React.useState("none");
-  const [displayWelcome, setDisplayWelcome] = React.useState("block");
+  const [showDefaultDisplay, setShowDefaultDisplay] = React.useState("none");
+  const [showWelcome, setShowWelcome] = React.useState("block");
   const [vulnerabilities, setVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [loadingWait, setLoadingWait] = React.useState(false);
+  const [severityFilter, setSeverityFilter] = React.useState("all");
 
-  class TrivyVulnerability {
-    id: string
-    title: string
-    severity: string
-    severityClass: string
-    description: string
-    pkgName: string
-    installedVersion: string
-    fixedVersion: string
-    references: string[]
-    primaryURL: string
-    visible: boolean
-    constructor(v: any) {
-      this.id = v.VulnerabilityID;
-      this.title = v.Title;
-      this.severity = v.Severity;
-      this.severityClass = v.Severity.toLowerCase();
-      this.description = v.Description;
-      this.pkgName = v.PkgName;
-      this.installedVersion = v.InstalledVersion ? v.InstalledVersion : "";
-      this.fixedVersion = v.FixedVersion ? v.FixedVersion : "";
-      this.references = v.References;
-      this.primaryURL = v.PrimaryURL;
-      this.visible = false;
-
-    }
-  }
 
   const getSeverityOrdering = (severity: string): number => {
     switch (severity) {
@@ -74,8 +40,9 @@ export function App() {
         return 3;
       case "UNKNOWN":
         return 4;
+      default:
+        return 5
     }
-    return -1;
   };
 
   async function checkForCacheVolume() {
@@ -107,13 +74,6 @@ export function App() {
         }
       });
     return success;
-  }
-
-  function runScan(fixedOnly: boolean) {
-    setLoadingWait(true);
-    setDisplayStandard("block");
-    setDisplayWelcome("none");
-    triggerTrivy(fixedOnly);
   }
 
   async function triggerTrivy(fixedOnly: boolean) {
@@ -152,6 +112,10 @@ export function App() {
     commandParts.push(scanImage);
     console.log(commandParts);
 
+    ({ stdout, stderr } = await runTrivy(commandParts, stdout, stderr));
+  }
+
+  async function runTrivy(commandParts: string[], stdout: string, stderr: string) {
     await window.ddClient.docker.cli.exec(
       "run", commandParts,
       {
@@ -186,9 +150,11 @@ export function App() {
         },
       }
     );
+    return { stdout, stderr };
   }
 
-  function processResult(res: any) {
+
+  const processResult = (res: any) => {
     let all = 0;
     let critical = 0;
     let high = 0;
@@ -269,8 +235,14 @@ export function App() {
     }
   }
 
+  const runScan = (fixedOnly: boolean) => {
+    setLoadingWait(true);
+    setShowDefaultDisplay("block");
+    setShowWelcome("none");
+    triggerTrivy(fixedOnly);
+  }
 
-  function resetCounters() {
+  const resetCounters = () => {
     setVulnerabilities([]);
     setAll(0);
     setCritical(0);
@@ -282,8 +254,7 @@ export function App() {
     setShowFilter("none");
   }
 
-  const [severityFilter, setSeverityFilter] = React.useState("all");
-  function triggerFilter(e: any, obj: string) {
+  const triggerFilter = (e: React.MouseEvent<HTMLElement>, obj: string) => {
     setSeverityFilter(obj);
     if (obj === "all") {
       setVulnerabilities(allVulnerabilities);
@@ -294,134 +265,50 @@ export function App() {
     setVulnerabilities(filtered);
   }
 
-  function imageUpdated() {
-    setShowFilter("none");
+  const imageUpdated = () => {
     resetCounters();
-    setVulnerabilities([]);
   }
 
-
-  function goToTrivy() {
-    window.ddClient.host.openExternal("https://trivy.dev")
-  }
 
   return (
     <DockerMuiThemeProvider>
       <div>
         <CssBaseline />
-        <Box sx={{ display: displayStandard, marginTop: '2rem' }}>
-          <Box sx={{ m: '2rem' }}>
-            <Links />
-            <Box sx={{ display: 'flex' }}>
-              <img src="images/trivy_logo.svg" alt="Trivy Logo" height="100px" />
-              <Box sx={{ marginLeft: '0.5rem', marginTop: '0.7rem' }}>
-                <Typography variant="h4" fontFamily='Droplet'>
-                  aqua
-                </Typography>
-                <Typography variant="h2" fontFamily='Droplet'>
-                  trivy
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-          <Box sx={{ marginLeft: '2rem' }}>
-            <ImageList
-              scanImage={scanImage}
-              setScanImage={setScanImage}
-              runScan={runScan}
-              imageUpdated={imageUpdated}
-            />
-          </Box>
-        </Box>
-        <Box sx={{ m: '0.5rem' }}>
-          <ToggleButtonGroup
-            value={severityFilter}
-            exclusive
-            onChange={triggerFilter}
-            sx={{ marginLeft: '2rem', marginTop: '1.5rem', marginBottom: '0.8rem', marginRight: '1.5rem', float: "right", display: showFilter }}
-          >
-            <ToggleButton value="all" >All ({all})</ToggleButton>
-            <ToggleButton value="critical" disabled={critical === 0}>
-              <Typography color="red">┃ </Typography>
-              Critical ({critical})</ToggleButton>
-            <ToggleButton value="high" disabled={high === 0} >
-              <Typography color="orangered">┃ </Typography>
-              High ({high})</ToggleButton>
-            <ToggleButton value="medium" disabled={medium === 0} >
-              <Typography color="orange">┃ </Typography>
-              Medium ({medium})</ToggleButton>
-            <ToggleButton value="low" disabled={low === 0} >
-              <Typography color="gray">┃ </Typography>
-              Low ({low})</ToggleButton>
-            <ToggleButton value="unknown" disabled={unknown === 0} >
-              <Typography color="gray">┃ </Typography>
-              Unknown ({unknown})</ToggleButton>
+        <DefaultDisplay
+          showDefaultDisplay={showDefaultDisplay}
+          scanImage={scanImage}
+          setScanImage={setScanImage}
+          runScan={runScan}
+          imageUpdated={imageUpdated}
+        />
 
-          </ToggleButtonGroup>
-        </Box>
-        <Box sx={{ minWidth: 275, m: '8rem', display: displayWelcome }}>
-          <Card raised variant="outlined">
-            <CardContent>
-              <Box sx={{ display: 'flex' }}>
-                <img src="images/trivy_logo.svg" alt="Trivy Logo" height="200px" />
-                <Box sx={{ marginLeft: '0.5rem', marginTop: '1.7rem' }}>
-                  <Typography variant="h3" fontFamily='Droplet'>
-                    aqua
-                  </Typography>
-                  <Typography variant="h1" fontFamily='Droplet'>
-                    trivy
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Typography variant="h4" component="div" gutterBottom sx={{ marginTop: '4rem' }}>
-                Free, open-source container image scanning for local and remote images.
-              </Typography>
-
-              <Typography variant="h5" sx={{ marginTop: '2rem' }}>
-                <img src="images/tada.svg" alt="Tada Logo" height="20px" /> Scan unlimited images, no sign up required! <img src="images/tada.svg" alt="Tada Logo" height="20px" />
-              </Typography>
-
-              <Typography variant="h5" sx={{ marginTop: '2rem' }}>
-                Select from one of your locally installed images or simply type the name of the remote image you wish to scan. <br />
-                Scans run locally, nothing leaves your machine.
-              </Typography>
-              <Box sx={{ marginTop: '3rem' }}>
-                <ImageList
-                  scanImage={scanImage}
-                  setScanImage={setScanImage}
-                  runScan={runScan}
-                  imageUpdated={imageUpdated}
-                />
-              </Box>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={goToTrivy}>Learn More</Button>
-            </CardActions>
-
-          </Card>
-        </Box>
-        <Box sx={{ minWidth: 275, m: '10rem', p: '2rem', marginTop: '5rem', textAlign: 'center', display: showSuccess }}>
-          <Card>
-            <CardContent>
-
-              <Typography variant="h3" component="div" gutterBottom sx={{ marginTop: '4rem' }}>
-                Great News!
-              </Typography>
-              <img src="images/tada.svg" alt="Tada Logo" height="200px" />
-
-
-              <Typography variant="h4" sx={{ marginTop: '2rem' }}>
-                No vulnerabilities were found in {scanImage}
-              </Typography>
-            </CardContent>
-
-          </Card>
-        </Box>
-        <Vulns vulnerabilties={vulnerabilities} />
-        <Loading showLoading={loadingWait} />
+        <Vulns
+          vulnerabilties={vulnerabilities}
+          severityFilter={severityFilter}
+          triggerFilter={triggerFilter}
+          showFilter={showFilter}
+          all={all}
+          critical={critical}
+          high={high}
+          medium={medium}
+          low={low}
+          unknown={unknown}
+        />
+        <Welcome
+          displayWelcome={showWelcome}
+          scanImage={scanImage}
+          setScanImage={setScanImage}
+          runScan={runScan}
+          imageUpdated={imageUpdated}
+        />
+        <Success
+          scanImage={scanImage}
+          showSuccess={showSuccess}
+        />
+        <Loading
+          showLoading={loadingWait}
+        />
       </div>
     </DockerMuiThemeProvider >
   );
 }
-

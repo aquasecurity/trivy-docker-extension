@@ -274,6 +274,15 @@ export function App() {
     <DockerMuiThemeProvider>
       <div>
         <CssBaseline />
+        {/* Entry point to the extension - large hero with description and scan box */}
+        <Welcome
+          displayWelcome={showWelcome}
+          scanImage={scanImage}
+          setScanImage={setScanImage}
+          runScan={runScan}
+          imageUpdated={imageUpdated}
+        />
+        {/* Top level interaction point - hidden when the welcome screen is displayed */}
         <DefaultDisplay
           showDefaultDisplay={showDefaultDisplay}
           scanImage={scanImage}
@@ -281,7 +290,7 @@ export function App() {
           runScan={runScan}
           imageUpdated={imageUpdated}
         />
-
+        {/* Table of vulnerabilities with the filter control included in this component */}
         <Vulns
           vulnerabilties={vulnerabilities}
           severityFilter={severityFilter}
@@ -294,17 +303,12 @@ export function App() {
           low={low}
           unknown={unknown}
         />
-        <Welcome
-          displayWelcome={showWelcome}
-          scanImage={scanImage}
-          setScanImage={setScanImage}
-          runScan={runScan}
-          imageUpdated={imageUpdated}
-        />
+        {/* Component that is displayed when the scan completes without issue */}
         <Success
           scanImage={scanImage}
           showSuccess={showSuccess}
         />
+        {/* Shim to block the screen when the scan is loading  */}
         <Loading
           showLoading={loadingWait}
         />

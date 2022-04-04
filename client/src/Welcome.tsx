@@ -9,7 +9,7 @@ export function Welcome(props: any) {
     }
 
     return (
-        <Box sx={{ minWidth: 275, m: '4rem', display: props.showWelcome }}>
+        <Box sx={{ minWidth: 275, m: '4rem', display: props.showWelcome, textAlign: 'center' }}>
             <Card raised variant="outlined">
                 <CardContent>
                     <Box sx={{ display: 'flex' }}>
@@ -27,13 +27,11 @@ export function Welcome(props: any) {
                         Free, open-source container image scanning for local and remote images.
                     </Typography>
                     <Typography variant="h5" sx={{ marginTop: '2rem' }}>
-                        <img src="images/tada.svg" alt="Tada Logo" height="20px" /> Scan unlimited images, no sign up required! <img src="images/tada.svg" alt="Tada Logo" height="20px" />
+                        <img src="images/tada.svg" alt="Tada Logo" height="20px" /> Scan unlimited images, no sign up required! Scans run locally, nothing leaves your machine.<img src="images/tada.svg" alt="Tada Logo" height="20px" />
                     </Typography>
                     <Typography variant="h5" sx={{ marginTop: '2rem' }}>
                         Select from one of your locally installed images or simply type the name of the remote image you wish to scan.
-                        <br />
-                        <br />
-                        Scans run locally, nothing leaves your machine.
+
                     </Typography>
                     <Box sx={{ marginTop: '3rem' }}>
                         <ImageList

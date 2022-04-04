@@ -98,6 +98,10 @@ export function ImageList(props: any) {
         }
     }
 
+    const enableScan = () => {
+        setDisableScan(false);
+    }
+
     return (
         <Box>
             <Box sx={{ display: 'flex' }}>
@@ -118,16 +122,17 @@ export function ImageList(props: any) {
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            placeholder="Scan Image"
+                            placeholder="Select image or type name here..."
                         />)}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
+                    onFocus={enableScan}
                 />
                 <Button sx={{ marginLeft: '3px' }}
                     variant="contained"
                     disabled={disableScan}
                     onClick={runScan}>
-                    Scan
+                    Scan Image
                 </Button>
             </Box>
             <FormGroup>

@@ -80,6 +80,7 @@ export function ImageList(props: any) {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
+        setDisableScan(false);
         switch (event.key) {
             case "Tab": {
                 handleChange(event, props.scanImage);
@@ -97,13 +98,8 @@ export function ImageList(props: any) {
             setDisableScan(false);
         }
     }
-
-    const enableScan = () => {
-        setDisableScan(false);
-    }
-
     return (
-        <Box>
+        <Box minWidth='100%'>
             <Box sx={{ display: 'flex' }}>
                 <Autocomplete
                     value={props.scanImage}
@@ -117,7 +113,6 @@ export function ImageList(props: any) {
                     onClose={() => {
                         setOpen(false);
                     }}
-                    sx={{ width: 500 }}
                     loading={loading}
                     renderInput={(params) => (
                         <TextField
@@ -126,7 +121,6 @@ export function ImageList(props: any) {
                         />)}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    onFocus={enableScan}
                 />
                 <Button sx={{ marginLeft: '3px' }}
                     variant="contained"

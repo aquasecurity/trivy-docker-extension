@@ -12,7 +12,7 @@ export function DefaultDisplay(props: any) {
             <Box sx={{ m: '2rem', marginBottom: '1rem' }}>
                 <Links />
                 <Box sx={{ display: 'flex' }}>
-                    <img src="images/trivy_logo.svg" alt="Trivy Logo" height="100px" />
+                    <img src="images/trivy_logo.svg" alt="Trivy Logo" height="80px" />
                     <Box sx={{ marginLeft: '0.5rem', marginTop: '0.7rem' }}>
                         <Typography variant="h4" fontFamily='Droplet'>
                             aqua
@@ -24,7 +24,9 @@ export function DefaultDisplay(props: any) {
                 </Box>
             </Box>
             <Box sx={{ marginLeft: '2rem' }}>
-                <ImageList
+                <ImageList width='50%'
+                    disableScan={props.disableScan}
+                    setDisableScan={props.setDisableScan}
                     scanImage={props.scanImage}
                     setScanImage={props.setScanImage}
                     runScan={props.runScan}

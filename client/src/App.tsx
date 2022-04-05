@@ -12,6 +12,7 @@ import { Welcome } from './Welcome';
 export function App() {
 
   const [scanImage, setScanImage] = React.useState("");
+  const [disableScan, setDisableScan] = React.useState(true);
   const [all, setAll] = React.useState(0);
   const [critical, setCritical] = React.useState(0);
   const [high, setHigh] = React.useState(0);
@@ -22,7 +23,7 @@ export function App() {
   const [showFilter, setShowFilter] = React.useState("none");
   const [showSuccess, setShowSuccess] = React.useState("none");
   const [showDefaultDisplay, setShowDefaultDisplay] = React.useState("none");
-  const [showWelcome, setShowWelcome] = React.useState("block");
+  const [showWelcome, setShowWelcome] = React.useState("flex");
   const [vulnerabilities, setVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [loadingWait, setLoadingWait] = React.useState(false);
@@ -78,7 +79,7 @@ export function App() {
   }
 
   async function triggerTrivy() {
-    resetCounters();
+    resetUI();
     if (!(await checkForCacheVolume())) {
       await createCacheVolume().then((created) => {
         if (!created) {
@@ -132,6 +133,7 @@ export function App() {
           },
           onClose(exitCode: number) {
             setLoadingWait(false);
+            setDisableScan(false);
             if (exitCode === 0) {
               window.ddClient.desktopUI.toast.success(
                 `Scan of ${scanImage} completed successfully`
@@ -151,12 +153,6 @@ export function App() {
   }
 
   const processResult = (res: any) => {
-    let all = 0;
-    let critical = 0;
-    let high = 0;
-    let medium = 0;
-    let low = 0;
-    let unknown = 0;
 
     let vulns = [];
     if (res.stderr !== "") {
@@ -170,6 +166,15 @@ export function App() {
       setShowSuccess("block");
       return;
     }
+
+    let all = 0;
+    let critical = 0;
+    let high = 0;
+    let medium = 0;
+    let low = 0;
+    let unknown = 0;
+
+
     for (let i = 0; i < results.Results.length; i++) {
       let r = results.Results[i];
       if (r.Vulnerabilities === undefined) {
@@ -232,14 +237,14 @@ export function App() {
     triggerTrivy();
   }
 
-  const resetCounters = () => {
-    setVulnerabilities([]);
+  const resetUI = () => {
     setAll(0);
     setCritical(0);
     setHigh(0);
     setMedium(0);
     setLow(0);
     setUnknown(0);
+    setVulnerabilities([]);
     setShowSuccess("none");
     setShowFilter("none");
   }
@@ -256,7 +261,7 @@ export function App() {
   }
 
   const imageUpdated = () => {
-    resetCounters();
+    resetUI();
   }
 
 
@@ -268,6 +273,8 @@ export function App() {
         <Welcome
           showWelcome={showWelcome}
           scanImage={scanImage}
+          disableScan={disableScan}
+          setDisableScan={setDisableScan}
           setScanImage={setScanImage}
           fixedOnly={fixedOnly}
           setFixedOnly={setFixedOnly}
@@ -278,6 +285,8 @@ export function App() {
         <DefaultDisplay
           showDefaultDisplay={showDefaultDisplay}
           scanImage={scanImage}
+          disableScan={disableScan}
+          setDisableScan={setDisableScan}
           setScanImage={setScanImage}
           fixedOnly={fixedOnly}
           setFixedOnly={setFixedOnly}

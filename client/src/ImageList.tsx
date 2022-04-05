@@ -9,10 +9,11 @@ import React from 'react';
 
 export function ImageList(props: any) {
     const [open, setOpen] = React.useState(false);
-    const [disableScan, setDisableScan] = React.useState(true);
+    const [loaded, setLoaded] = React.useState(false);
     const [images, setImages] = React.useState<string[]>([]);
-    const loading = open && images !== undefined && images.length === 0;
+    const loading = open && !loaded;
     const ignoredImages = ["aquasec/trivy", "trivy-docker-extension"];
+
 
     React.useEffect(() => {
         let active = true;
@@ -24,6 +25,7 @@ export function ImageList(props: any) {
 
         (async () => {
             if (active) {
+                setLoaded(true);
                 loadImages();
             }
         })();
@@ -46,10 +48,11 @@ export function ImageList(props: any) {
         } catch (imageResp) {
             return images;
         }
+
         Promise.resolve(images).then(images => {
             console.log(images);
             if (images === null || images === undefined || images.length === 0) {
-                setImages(["No images found"]);
+                setImages([]);
                 return
             }
             const listImages = images.map((images: any) => images.RepoTags)
@@ -64,13 +67,18 @@ export function ImageList(props: any) {
                     return true;
                 })
                 .flat();
+
+            if (listImages.length == 0) {
+
+            }
+
             setImages(listImages);
         })
     }
 
     const runScan = () => {
         // disable the scan button as a priority
-        setDisableScan(true);
+        props.setDisableScan(true);
         // run the scan 
         props.runScan();
     }
@@ -80,8 +88,13 @@ export function ImageList(props: any) {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
+        props.setDisableScan(false);
         switch (event.key) {
             case "Tab": {
+                handleChange(event, props.scanImage);
+                break;
+            }
+            case "Enter": {
                 handleChange(event, props.scanImage);
                 break;
             }
@@ -90,18 +103,18 @@ export function ImageList(props: any) {
     };
 
     const handleChange = (e: React.ChangeEvent<{}>, obj: string) => {
-        setDisableScan(true);
         props.imageUpdated();
+        props.setScanImage(obj);
         if (obj && obj !== "No images found") {
-            props.setScanImage(obj);
-            setDisableScan(false);
+            props.setDisableScan(false);
+        } else {
+            props.setDisableScan(true);
         }
     }
-
     return (
-        <Box>
-            <Box sx={{ display: 'flex' }}>
-                <Autocomplete
+        <Box width={props.width} minWidth='450px'>
+            <Box display='flex'>
+                <Autocomplete sx={{ flexGrow: 1 }}
                     value={props.scanImage}
                     freeSolo
                     id="scanSelector"
@@ -113,21 +126,22 @@ export function ImageList(props: any) {
                     onClose={() => {
                         setOpen(false);
                     }}
-                    sx={{ width: 500 }}
                     loading={loading}
+                    noOptionsText="No local images found"
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            placeholder="Scan Image"
+                            placeholder="Select image or type name here..."
                         />)}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                 />
+
                 <Button sx={{ marginLeft: '3px' }}
                     variant="contained"
-                    disabled={disableScan}
+                    disabled={props.disableScan}
                     onClick={runScan}>
-                    Scan
+                    Scan Image
                 </Button>
             </Box>
             <FormGroup>

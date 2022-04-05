@@ -12,6 +12,7 @@ import { Welcome } from './Welcome';
 export function App() {
 
   const [scanImage, setScanImage] = React.useState("");
+  const [disableScan, setDisableScan] = React.useState(true);
   const [all, setAll] = React.useState(0);
   const [critical, setCritical] = React.useState(0);
   const [high, setHigh] = React.useState(0);
@@ -22,7 +23,7 @@ export function App() {
   const [showFilter, setShowFilter] = React.useState("none");
   const [showSuccess, setShowSuccess] = React.useState("none");
   const [showDefaultDisplay, setShowDefaultDisplay] = React.useState("none");
-  const [showWelcome, setShowWelcome] = React.useState("block");
+  const [showWelcome, setShowWelcome] = React.useState("flex");
   const [vulnerabilities, setVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [loadingWait, setLoadingWait] = React.useState(false);
@@ -132,6 +133,7 @@ export function App() {
           },
           onClose(exitCode: number) {
             setLoadingWait(false);
+            setDisableScan(false);
             if (exitCode === 0) {
               window.ddClient.desktopUI.toast.success(
                 `Scan of ${scanImage} completed successfully`
@@ -271,6 +273,8 @@ export function App() {
         <Welcome
           showWelcome={showWelcome}
           scanImage={scanImage}
+          disableScan={disableScan}
+          setDisableScan={setDisableScan}
           setScanImage={setScanImage}
           fixedOnly={fixedOnly}
           setFixedOnly={setFixedOnly}
@@ -281,6 +285,8 @@ export function App() {
         <DefaultDisplay
           showDefaultDisplay={showDefaultDisplay}
           scanImage={scanImage}
+          disableScan={disableScan}
+          setDisableScan={setDisableScan}
           setScanImage={setScanImage}
           fixedOnly={fixedOnly}
           setFixedOnly={setFixedOnly}

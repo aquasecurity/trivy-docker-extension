@@ -9,7 +9,7 @@ export function Welcome(props: any) {
     }
 
     return (
-        <Box flexDirection='column' alignItems="center" sx={{ minWidth: 275, m: '8rem', flexDirection: "column", display: props.showWelcome, justifyContent: 'center' }}>
+        <Box flexDirection='column' alignItems="center" sx={{ minWidth: 275, m: '4rem', flexDirection: "column", display: props.showWelcome, justifyContent: 'center' }}>
             <Box sx={{ display: 'flex' }}>
                 <img src="images/trivy_logo.svg" alt="Trivy Logo" height="160px" />
                 <Box sx={{ marginLeft: '0.8rem', marginTop: '1.8rem' }}>
@@ -22,13 +22,13 @@ export function Welcome(props: any) {
                 </Box>
             </Box>
             <Typography variant="h4" component="div" gutterBottom sx={{ marginTop: '2.5rem' }}>
-                Free, open-source container image scanning for local and remote images.
+                Free, open-source container image scanning.
             </Typography>
             <Typography variant="h5" sx={{ marginTop: '2rem' }}>
                 <img src="images/tada.svg" alt="Tada Logo" height="30px" /> Scan unlimited images, no sign up required! Scans run on your machine!
             </Typography>
             <Typography variant="h5" sx={{ marginTop: '2rem' }}>
-                Select from one of your locally stored images or enter the name of a remote image you wish to scan.
+                Select from a local stored images or enter the name of a remote image you wish to scan.
 
             </Typography>
             <Box marginTop='4rem' width='80%' maxWidth='800px'>

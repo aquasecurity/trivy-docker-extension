@@ -25,7 +25,7 @@ export function Welcome(props: any) {
                 Free, open-source container image scanning for local and remote images.
             </Typography>
             <Typography variant="h5" sx={{ marginTop: '2rem' }}>
-                <img src="images/tada.svg" alt="Tada Logo" height="20px" /> Scan unlimited images, no sign up required! Scans run on your machine.<img src="images/tada.svg" alt="Tada Logo" height="20px" />
+                <img src="images/tada.svg" alt="Tada Logo" height="30px" /> Scan unlimited images, no sign up required! Scans run on your machine!
             </Typography>
             <Typography variant="h5" sx={{ marginTop: '2rem' }}>
                 Select from one of your locally stored images or enter the name of a remote image you wish to scan.
@@ -44,9 +44,9 @@ export function Welcome(props: any) {
                     textAlign='center'
                 />
             </Box>
-            <Box width='40%' maxWidth='400px' marginTop='2.5rem'>
-                <Card sx={{ display: 'flex', p: '2rem' }}>
-                    <CardContent sx={{ display: 'flex' }}>
+            <Box width='50%' minWidth='400px' marginTop='2.5rem'>
+                <Card sx={{ display: 'flex', p: '2rem', justifyContent: 'center' }}>
+                    <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Typography variant="h6" marginTop='5px' marginRight='20px' >New to Trivy?   </Typography>
                         <Button onClick={goToTrivy}><Typography variant="h6">Learn more...</Typography></Button>
                     </CardContent>

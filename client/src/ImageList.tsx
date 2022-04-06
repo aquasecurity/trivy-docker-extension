@@ -91,11 +91,18 @@ export function ImageList(props: any) {
         props.setDisableScan(false);
         switch (event.key) {
             case "Tab": {
-                handleChange(event, props.scanImage);
+                event.preventDefault();
+                event.stopPropagation();
+                const target = event.target as HTMLTextAreaElement;
+                handleChange(event, target.value);
                 break;
             }
             case "Enter": {
-                handleChange(event, props.scanImage);
+                event.preventDefault();
+                event.stopPropagation();
+                const target = event.target as HTMLTextAreaElement;
+                handleChange(event, target.value);
+                runScan();
                 break;
             }
             default:

@@ -44,7 +44,7 @@ export function Welcome(props: any) {
                     textAlign='center'
                 />
             </Box>
-            <Box width='50%' minWidth='400px' marginTop='2.5rem'>
+            <Box width='50%' minWidth='400px' maxWidth='700px' marginTop='2.5rem'>
                 <Card sx={{ display: 'flex', p: '2rem', justifyContent: 'center' }}>
                     <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Typography variant="h6" marginTop='5px' marginRight='20px' >New to Trivy?   </Typography>

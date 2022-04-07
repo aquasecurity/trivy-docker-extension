@@ -5,7 +5,8 @@ import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { JsxTagNameExpression } from 'typescript';
 
 export function ImageList(props: any) {
     const [open, setOpen] = React.useState(false);
@@ -87,15 +88,11 @@ export function ImageList(props: any) {
         props.setFixedOnly(!props.fixedOnly);
     }
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         props.setDisableScan(false);
         switch (event.key) {
             case "Tab": {
-                handleChange(event, props.scanImage);
-                break;
-            }
-            case "Enter": {
-                handleChange(event, props.scanImage);
+                handleChange(event, event.currentTarget.value);
                 break;
             }
             default:
@@ -128,13 +125,15 @@ export function ImageList(props: any) {
                     }}
                     loading={loading}
                     noOptionsText="No local images found"
-                    renderInput={(params) => (
-                        <TextField
+                    renderInput={(params) => {
+                        params.inputProps.onKeyDown = handleKeyDown;
+                        return (<TextField
                             {...params}
                             placeholder="Select image or type name here..."
-                        />)}
+                        />);
+                    }}
                     onChange={handleChange}
-                    onKeyDown={handleKeyDown}
+
                 />
 
                 <Button sx={{ marginLeft: '3px' }}

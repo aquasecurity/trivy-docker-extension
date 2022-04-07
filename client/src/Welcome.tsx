@@ -28,7 +28,7 @@ export function Welcome(props: any) {
                 <img src="images/tada.svg" alt="Tada Logo" height="30px" /> Scan unlimited images, no sign up required! Scans run on your machine!
             </Typography>
             <Typography variant="h5" sx={{ marginTop: '2rem' }}>
-                Select from a local stored images or enter the name of a remote image you wish to scan.
+                Select from a local stored image or enter the name of a remote image you wish to scan.
 
             </Typography>
             <Box marginTop='4rem' width='80%' maxWidth='800px'>

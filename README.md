@@ -1,6 +1,5 @@
 # Trivy Docker Extension
 
-> :warning: NOT TO BE MADE PUBLIC BEFORE Docker Conference
 
 ## What is this?
 

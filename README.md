@@ -1,3 +1,6 @@
+![Docker Pulls](https://img.shields.io/docker/pulls/aquasec/trivy-docker-extension?style=flat-square)
+![Latest Tagged Release](https://img.shields.io/github/v/tag/aquasecurity/trivy-docker-extension?style=flat-square)
+
 # Trivy Docker Extension
 
 

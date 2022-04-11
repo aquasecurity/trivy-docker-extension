@@ -21,6 +21,12 @@ When you run the scan you'll get the results
 
 ![Screenshot Results - Light Theme](.github/images/screenshot_results_light.png)
 
+When you run the scan you can optionally get the results in SBOM format
+
+![Screenshot SBOM Results](.github/images/screenshot_sbom_results.png)
+
+![Screenshot SBOM Results - Light Theme](.github/images/screenshot_sbom_results_light.png)
+
 ## What is is made of?
 
 The extension runs in its own container with a web interface that calls into the Docker extension API. At a high level the flow is;

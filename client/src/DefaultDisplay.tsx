@@ -33,6 +33,8 @@ export function DefaultDisplay(props: any) {
                     imageUpdated={props.imageUpdated}
                     fixedOnly={props.fixedOnly}
                     setFixedOnly={props.setFixedOnly}
+                    SBOMOutput={props.SBOMOutput}
+                    setSBOMOutput={props.setSBOMOutput}
                 />
             </Box>
         </Box>)

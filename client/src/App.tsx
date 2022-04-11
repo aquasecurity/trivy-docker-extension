@@ -4,6 +4,7 @@ import React from 'react';
 
 import { DefaultDisplay } from './DefaultDisplay';
 import { Loading } from './Loading';
+import { SBOM } from './SBOM';
 import { Success } from './Success';
 import { TrivyVulnerability } from './TrivyVulnerability';
 import { Vulns } from './Vulns';
@@ -18,11 +19,14 @@ export function App() {
   const [high, setHigh] = React.useState(0);
   const [medium, setMedium] = React.useState(0);
   const [fixedOnly, setFixedOnly] = React.useState(true);
+  const [SBOMOutput, setSBOMOutput] = React.useState(false);
+  const [SBOMContent, setSBOMContent] = React.useState("");
   const [low, setLow] = React.useState(0);
   const [unknown, setUnknown] = React.useState(0);
   const [showFilter, setShowFilter] = React.useState("none");
   const [showSuccess, setShowSuccess] = React.useState("none");
   const [showDefaultDisplay, setShowDefaultDisplay] = React.useState("none");
+  const [showSBOM, setShowSBOM] = React.useState("none");
   const [showWelcome, setShowWelcome] = React.useState("flex");
   const [vulnerabilities, setVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
@@ -102,12 +106,17 @@ export function App() {
       "-v",
       "trivy-docker-extension-cache:/root/.cache",
       "aquasec/trivy",
-      "--quiet",
-      "image",
-      "-f=json"
+      "--quiet"
     ];
 
-    if (fixedOnly) {
+    if (SBOMOutput) {
+      commandParts.push("sbom")
+    } else {
+      commandParts.push("image")
+      commandParts.push("-f=json")
+    }
+
+    if (fixedOnly && !SBOMOutput) {
       commandParts.push("--ignore-unfixed");
     }
     commandParts.push(scanImage);
@@ -134,11 +143,11 @@ export function App() {
           onClose(exitCode: number) {
             setLoadingWait(false);
             setDisableScan(false);
+            var res = { stdout: stdout, stderr: stderr };
             if (exitCode === 0) {
               window.ddClient.desktopUI.toast.success(
                 `Scan of ${scanImage} completed successfully`
               );
-              var res = { stdout: stdout, stderr: stderr };
               processResult(res);
             } else {
               window.ddClient.desktopUI.toast.error(
@@ -160,6 +169,15 @@ export function App() {
     }
 
     var results = JSON.parse(res.stdout);
+
+    if (SBOMOutput) {
+      setShowSBOM("block");
+      setSBOMContent(results);
+      return;
+    }
+
+
+
     if (results.Results === undefined) {
       setVulnerabilities([]);
       setShowFilter("none");
@@ -246,6 +264,7 @@ export function App() {
     setUnknown(0);
     setVulnerabilities([]);
     setShowSuccess("none");
+    setShowSBOM("none");
     setShowFilter("none");
   }
 
@@ -278,6 +297,8 @@ export function App() {
           setScanImage={setScanImage}
           fixedOnly={fixedOnly}
           setFixedOnly={setFixedOnly}
+          SBOMOutput={SBOMOutput}
+          setSBOMOutput={setSBOMOutput}
           runScan={runScan}
           imageUpdated={imageUpdated}
         />
@@ -290,8 +311,14 @@ export function App() {
           setScanImage={setScanImage}
           fixedOnly={fixedOnly}
           setFixedOnly={setFixedOnly}
+          SBOMOutput={SBOMOutput}
+          setSBOMOutput={setSBOMOutput}
           runScan={runScan}
           imageUpdated={imageUpdated}
+        />
+        <SBOM
+          SBOMContent={SBOMContent}
+          showSBOM={showSBOM}
         />
         {/* Table of vulnerabilities with the filter control included in this component */}
         <Vulns

@@ -41,6 +41,8 @@ export function Welcome(props: any) {
                     imageUpdated={props.imageUpdated}
                     fixedOnly={props.fixedOnly}
                     setFixedOnly={props.setFixedOnly}
+                    SBOMOutput={props.SBOMOutput}
+                    setSBOMOutput={props.setSBOMOutput}
                     textAlign='center'
                 />
             </Box>

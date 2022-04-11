@@ -85,7 +85,13 @@ export function ImageList(props: any) {
     }
 
     const toggleFixedOnly = () => {
+        props.imageUpdated();
         props.setFixedOnly(!props.fixedOnly);
+    }
+
+    const toggleSBOMOutput = () => {
+        props.imageUpdated();
+        props.setSBOMOutput(!props.SBOMOutput);
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -143,8 +149,9 @@ export function ImageList(props: any) {
                     Scan Image
                 </Button>
             </Box>
-            <FormGroup>
+            <FormGroup row sx={{ display: 'flex' }}>
                 <FormControlLabel control={<Switch checked={props.fixedOnly} onClick={toggleFixedOnly} />} label="Only show vulnerabilities that have fixes" />
+                <FormControlLabel control={<Switch checked={props.SBOMOutput} onClick={toggleSBOMOutput} />} label="Output as SBOM" />
             </FormGroup>
         </Box>
     );

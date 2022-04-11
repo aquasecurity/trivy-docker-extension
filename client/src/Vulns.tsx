@@ -1,5 +1,3 @@
-
-
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -12,7 +10,6 @@ import TableRow from '@mui/material/TableRow';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from '@mui/system';
 import { ReactChild, ReactFragment, ReactPortal } from 'react';
-import React from 'react';
 import { VulnsFilter } from './VulnsFilter';
 
 

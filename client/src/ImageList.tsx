@@ -10,6 +10,7 @@ import { JsxTagNameExpression } from 'typescript';
 
 export function ImageList(props: any) {
     const [open, setOpen] = React.useState(false);
+    const [scanTriggered, setScanTriggered] = React.useState(false);
     const [loaded, setLoaded] = React.useState(false);
     const [images, setImages] = React.useState<string[]>([]);
     const loading = open && !loaded;
@@ -77,23 +78,24 @@ export function ImageList(props: any) {
         })
     }
 
-    const runScan = () => {
+    const triggerScan = () => {
         // disable the scan button as a priority
+        props.setSBOMOutput(false);
         props.setDisableScan(true);
-        // run the scan 
-        props.runScan();
+        setScanTriggered(true);
     }
+
+    React.useEffect(() => {
+        if (scanTriggered && !props.SBOMOutput && props.scanImage !== "") {
+            props.runScan();
+            setScanTriggered(false);
+        }
+    }, [scanTriggered]);
 
     const toggleFixedOnly = () => {
         props.imageUpdated();
         props.setFixedOnly(!props.fixedOnly);
     }
-
-    const toggleSBOMOutput = () => {
-        props.imageUpdated();
-        props.setSBOMOutput(!props.SBOMOutput);
-    }
-
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         props.setDisableScan(false);
         switch (event.key) {
@@ -114,6 +116,18 @@ export function ImageList(props: any) {
             props.setDisableScan(true);
         }
     }
+
+    const handleInputChange = (e: React.SyntheticEvent<{}>, obj: string) => {
+        props.imageUpdated();
+        props.setScanImage(obj);
+        if (obj && obj !== "No images found") {
+            props.setDisableScan(false);
+        } else {
+            props.setDisableScan(true);
+        }
+    }
+
+
     return (
         <Box width={props.width} minWidth='450px'>
             <Box display='flex'>
@@ -137,23 +151,22 @@ export function ImageList(props: any) {
                             {...params}
                             placeholder="Select image or type name here..."
                         />);
-                    }}
+                    }
+                    }
                     onChange={handleChange}
-
+                    onInputChange={handleInputChange}
                 />
 
                 <Button sx={{ marginLeft: '3px' }}
                     variant="contained"
                     disabled={props.disableScan}
-                    onClick={runScan}>
+                    onClick={triggerScan}>
                     Scan Image
                 </Button>
             </Box>
             <FormGroup row sx={{ display: 'flex' }}>
                 <FormControlLabel control={<Switch checked={props.fixedOnly} onClick={toggleFixedOnly} />} label="Only show vulnerabilities that have fixes" />
-                <FormControlLabel control={<Switch checked={props.SBOMOutput} onClick={toggleSBOMOutput} />} label="Output as SBOM" />
             </FormGroup>
         </Box>
     );
 }
-

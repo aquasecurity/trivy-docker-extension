@@ -19,7 +19,7 @@ export function App() {
   const [high, setHigh] = React.useState(0);
   const [medium, setMedium] = React.useState(0);
   const [fixedOnly, setFixedOnly] = React.useState(true);
-  const [SBOMOutput, setSBOMOutput] = React.useState(false);
+  const [SBOMOutput, setSBOMOutput] = React.useState<boolean>(false);
   const [SBOMContent, setSBOMContent] = React.useState("");
   const [low, setLow] = React.useState(0);
   const [unknown, setUnknown] = React.useState(0);
@@ -145,13 +145,10 @@ export function App() {
             setDisableScan(false);
             var res = { stdout: stdout, stderr: stderr };
             if (exitCode === 0) {
-              window.ddClient.desktopUI.toast.success(
-                `Scan of ${scanImage} completed successfully`
-              );
               processResult(res);
             } else {
               window.ddClient.desktopUI.toast.error(
-                `An error occurred while scanning ${scanImage}`
+                `An error occurred while scanning ${scanImage}: ${res.stderr}`
               );
             }
           },
@@ -332,6 +329,9 @@ export function App() {
           medium={medium}
           low={low}
           unknown={unknown}
+          SBOMOutput={SBOMOutput}
+          setSBOMOutput={setSBOMOutput}
+          runScan={runScan}
         />
         {/* Component that is displayed when the scan completes without issue */}
         <Success

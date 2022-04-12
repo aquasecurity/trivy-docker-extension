@@ -23,8 +23,8 @@ export function SBOM(props: any) {
     return (
         <Box sx={{ m: '2rem', display: props.showSBOM }}>
             <Stack spacing={1} direction="row" sx={{ float: 'right', marginBottom: '0.5rem', }}>
-                <Button variant="contained" onClick={saveSBOMToFile}>Save SBOM to File</Button>
                 <Button variant="contained" onClick={saveToClipboard}>Copy to Clipboard</Button>
+                <Button variant="contained" onClick={saveSBOMToFile}>Save SBOM to File</Button>
             </Stack>
             <Card sx={{ p: '1rem', border: '1 solid', clear: 'both', flexWrap: 'wrap' }}>
                 <CardContent>

@@ -11,14 +11,27 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from '@mui/system';
 import { ReactChild, ReactFragment, ReactPortal } from 'react';
 import { VulnsFilter } from './VulnsFilter';
+import { Button } from '@mui/material';
+import React from 'react';
 
 
 export function Vulns(props: any) {
     const v = props.vulnerabilties;
 
-    const handleClick = (e: any) => {
+    const handleAVDLinkClick = (e: any) => {
         { window.ddClient.host.openExternal(e.target.innerText) };
     }
+
+    const generateSBOM = () => {
+        props.setSBOMOutput(true);
+    }
+
+    React.useEffect(() => {
+        if (props.SBOMOutput) {
+            props.runScan();
+        }
+    }, [props.SBOMOutput]);
+
 
     return (
         <Box>
@@ -33,6 +46,12 @@ export function Vulns(props: any) {
                 low={props.low}
                 unknown={props.unknown}
             />
+            <Button onClick={generateSBOM} sx={{
+                float: 'right',
+                marginRight: '2rem',
+                marginBottom: '0.2rem',
+                display: props.showFilter
+            }}>Generate SBOM Output</Button>
             <Box sx={{ m: '2rem', clear: "both" }}>
 
                 {v.map((row: { id: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; title: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; description: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; pkgName: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; installedVersion: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; fixedVersion: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; primaryURL: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; }) => (
@@ -102,7 +121,7 @@ export function Vulns(props: any) {
                                     </TableCell>
                                     <TableCell>
                                         <Typography>
-                                            <a href="#" style={{ color: '#116ED0' }} onClick={handleClick}>{row.primaryURL}</a>
+                                            <a href="#" style={{ color: '#116ED0' }} onClick={handleAVDLinkClick}>{row.primaryURL}</a>
                                         </Typography>
                                     </TableCell>
                                 </TableRow>
@@ -112,7 +131,7 @@ export function Vulns(props: any) {
                 ))
                 }
             </Box>
-        </Box>
+        </Box >
     )
 
 }

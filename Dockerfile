@@ -1,3 +1,4 @@
+# Build the UI
 FROM node:lts-alpine3.15 AS client-builder
 WORKDIR /app/client
 
@@ -12,6 +13,16 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn-${TARGETARCH} yarn --
 COPY client /app/client
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn-${TARGETARCH} yarn build --network-timeout 1000000 
 
+
+# Build the service
+FROM golang:1.17-alpine AS service-builder
+ENV CGO_ENABLED=0
+RUN apk add --update make
+WORKDIR /plugin
+COPY . .
+RUN make bin
+
+# Bring it all together
 FROM debian:bullseye-slim
 LABEL org.opencontainers.image.title="Trivy" \
     org.opencontainers.image.description="Run unlimited vulnerability scans against remote or locally stored images." \
@@ -20,5 +31,9 @@ LABEL org.opencontainers.image.title="Trivy" \
     com.docker.desktop.extension.icon="https://raw.githubusercontent.com/aquasecurity/trivy/9f6842888ef5e3313cd10f0ce73652db5cba0337/docs/imgs/trivy.svg"
 
 COPY --from=client-builder /app/client/dist ui
+COPY --from=service-builder /plugin/bin/creds-service /
 COPY trivy.svg .
 COPY metadata.json .
+COPY docker-compose.yaml .
+
+CMD [ "/creds-service" ]

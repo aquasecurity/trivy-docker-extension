@@ -5,8 +5,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
-import React, { useEffect } from 'react';
-import { JsxTagNameExpression } from 'typescript';
+import React from 'react';
 
 export function ImageList(props: any) {
     const [open, setOpen] = React.useState(false);

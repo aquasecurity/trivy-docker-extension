@@ -3,7 +3,14 @@ TAG?=latest
 
 BUILDER=buildx-multi-arch
 
+STATIC_FLAGS=CGO_ENABLED=0
+LDFLAGS="-s -w"
+GO_BUILD=$(STATIC_FLAGS) go build -trimpath -ldflags=$(LDFLAGS)
 
+.PHONY: bin
+bin: ## Build the binary for the current plarform
+	@echo "$(INFO_COLOR)Building...$(NO_COLOR)"
+	$(GO_BUILD) -o bin/creds-service ./service
 
 .PHONY: build-app
 build-app:

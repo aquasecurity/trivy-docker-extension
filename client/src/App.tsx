@@ -1,6 +1,8 @@
 import { DockerMuiThemeProvider } from '@docker/docker-mui-theme';
+import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
+import { ConfigureCreds } from './ConfigureCreds';
 
 import { DefaultDisplay } from './DefaultDisplay';
 import { Loading } from './Loading';
@@ -286,62 +288,65 @@ export function App() {
       <div>
         <CssBaseline />
         {/* Entry point to the extension - large hero with description and scan box */}
-        <Welcome
-          showWelcome={showWelcome}
-          scanImage={scanImage}
-          disableScan={disableScan}
-          setDisableScan={setDisableScan}
-          setScanImage={setScanImage}
-          fixedOnly={fixedOnly}
-          setFixedOnly={setFixedOnly}
-          SBOMOutput={SBOMOutput}
-          setSBOMOutput={setSBOMOutput}
-          runScan={runScan}
-          imageUpdated={imageUpdated}
-        />
-        {/* Top level interaction point - hidden when the welcome screen is displayed */}
-        <DefaultDisplay
-          showDefaultDisplay={showDefaultDisplay}
-          scanImage={scanImage}
-          disableScan={disableScan}
-          setDisableScan={setDisableScan}
-          setScanImage={setScanImage}
-          fixedOnly={fixedOnly}
-          setFixedOnly={setFixedOnly}
-          SBOMOutput={SBOMOutput}
-          setSBOMOutput={setSBOMOutput}
-          runScan={runScan}
-          imageUpdated={imageUpdated}
-        />
-        <SBOM
-          SBOMContent={SBOMContent}
-          showSBOM={showSBOM}
-        />
-        {/* Table of vulnerabilities with the filter control included in this component */}
-        <Vulns
-          vulnerabilties={vulnerabilities}
-          severityFilter={severityFilter}
-          triggerFilter={triggerFilter}
-          showFilter={showFilter}
-          all={all}
-          critical={critical}
-          high={high}
-          medium={medium}
-          low={low}
-          unknown={unknown}
-          SBOMOutput={SBOMOutput}
-          setSBOMOutput={setSBOMOutput}
-          runScan={runScan}
-        />
-        {/* Component that is displayed when the scan completes without issue */}
-        <Success
-          scanImage={scanImage}
-          showSuccess={showSuccess}
-        />
-        {/* Shim to block the screen when the scan is loading  */}
-        <Loading
-          showLoading={loadingWait}
-        />
+        <ConfigureCreds sx={{ float: 'right' }} />
+        <Box sx={{ clear: 'both' }}>
+          <Welcome
+            showWelcome={showWelcome}
+            scanImage={scanImage}
+            disableScan={disableScan}
+            setDisableScan={setDisableScan}
+            setScanImage={setScanImage}
+            fixedOnly={fixedOnly}
+            setFixedOnly={setFixedOnly}
+            SBOMOutput={SBOMOutput}
+            setSBOMOutput={setSBOMOutput}
+            runScan={runScan}
+            imageUpdated={imageUpdated}
+          />
+          {/* Top level interaction point - hidden when the welcome screen is displayed */}
+          <DefaultDisplay
+            showDefaultDisplay={showDefaultDisplay}
+            scanImage={scanImage}
+            disableScan={disableScan}
+            setDisableScan={setDisableScan}
+            setScanImage={setScanImage}
+            fixedOnly={fixedOnly}
+            setFixedOnly={setFixedOnly}
+            SBOMOutput={SBOMOutput}
+            setSBOMOutput={setSBOMOutput}
+            runScan={runScan}
+            imageUpdated={imageUpdated}
+          />
+          <SBOM
+            SBOMContent={SBOMContent}
+            showSBOM={showSBOM}
+          />
+          {/* Table of vulnerabilities with the filter control included in this component */}
+          <Vulns
+            vulnerabilties={vulnerabilities}
+            severityFilter={severityFilter}
+            triggerFilter={triggerFilter}
+            showFilter={showFilter}
+            all={all}
+            critical={critical}
+            high={high}
+            medium={medium}
+            low={low}
+            unknown={unknown}
+            SBOMOutput={SBOMOutput}
+            setSBOMOutput={setSBOMOutput}
+            runScan={runScan}
+          />
+          {/* Component that is displayed when the scan completes without issue */}
+          <Success
+            scanImage={scanImage}
+            showSuccess={showSuccess}
+          />
+          {/* Shim to block the screen when the scan is loading  */}
+          <Loading
+            showLoading={loadingWait}
+          />
+        </Box>
       </div>
     </DockerMuiThemeProvider >
   );

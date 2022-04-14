@@ -9,12 +9,13 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aquasecurity/trivy-docker-extension/service/internal/auth"
 	"github.com/aquasecurity/trivy-docker-extension/service/internal/socket"
 	"github.com/labstack/echo"
 	"github.com/sirupsen/logrus"
 )
 
-var credsFile = "/creds/.aqua"
+const credsFile = "/creds/.aqua"
 
 type Credentials struct {
 	AquaKey    string `json:"aqua_key"`
@@ -22,7 +23,7 @@ type Credentials struct {
 }
 
 func main() {
-	var socketPath = flag.String("socket", "/run/guest-services/trivy-aqua-creds.sock", "Unix domain socket to listen on")
+	var socketPath = flag.String("socket", "/run/guest-services/plugin-trivy.sock", "Unix domain socket to listen on")
 	var testPort = flag.Int("testPort", 0, "Test port to expose instead of socket")
 	flag.Parse()
 	unixSocket := "unix:" + *socketPath
@@ -44,8 +45,14 @@ func main() {
 
 	router.POST("/credentials", writeCredentials)
 	router.GET("/credentials", getCredentials)
+	router.DELETE("/credentials", deleteCredentials)
 
 	log.Fatal(router.Start(startURL))
+}
+
+func deleteCredentials(ctx echo.Context) error {
+	logrus.Info("Received delete credentials request")
+	return os.Remove(credsFile)
 }
 
 func writeCredentials(ctx echo.Context) error {
@@ -59,9 +66,10 @@ func writeCredentials(ctx echo.Context) error {
 	if err := ctx.Bind(creds); err != nil {
 		return internalError(ctx, err)
 	}
-
-	logrus.Infof("Received credentials: %v", creds)
-
+	validated, err := auth.ValidateCredentials(creds.AquaKey, creds.AquaSecret)
+	if err != nil || validated == "" {
+		return internalError(ctx, err)
+	}
 	content, err := json.Marshal(creds)
 	if err != nil {
 		return internalError(ctx, err)
@@ -77,7 +85,7 @@ func getCredentials(ctx echo.Context) error {
 		return ctx.JSON(http.StatusOK, creds)
 	}
 	if err != json.Unmarshal(content, &creds) {
-		logrus.Errorf("Error occurred while unmarshalling creds file: %w", err)
+		logrus.Errorf("Error occurred while unmarshalling creds file, returning empty creds file: %w", err)
 		return ctx.JSON(http.StatusOK, creds)
 	}
 	return ctx.JSON(http.StatusOK, creds)

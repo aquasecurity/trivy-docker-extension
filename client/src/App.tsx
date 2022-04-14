@@ -11,29 +11,45 @@ import { Success } from './Success';
 import { TrivyVulnerability } from './TrivyVulnerability';
 import { Vulns } from './Vulns';
 import { Welcome } from './Welcome';
+import ReactGA from 'react-ga';
+import { Metric } from './Metrics';
+ReactGA.initialize('UA-226030090-1');
+
 
 export function App() {
+  const [aquaKey, setAquaKey] = React.useState("");
+  const [aquaSecret, setAquaSecret] = React.useState("");
 
   const [scanImage, setScanImage] = React.useState("");
   const [disableScan, setDisableScan] = React.useState(true);
+  const [fixedOnly, setFixedOnly] = React.useState(true);
+  const [uploadAqua, setUploadAqua] = React.useState(false);
+  const [SBOMOutput, setSBOMOutput] = React.useState<boolean>(false);
+  const [SBOMContent, setSBOMContent] = React.useState("");
+
+
+  const [showLoginBox, setShowLoginBox] = React.useState(false);
+  const [showUploadAqua, setShowUploadAqua] = React.useState("none")
+  const [showSBOM, setShowSBOM] = React.useState("none");
+  const [showFilter, setShowFilter] = React.useState("none");
+  const [showSuccess, setShowSuccess] = React.useState("none");
+  const [showDefaultDisplay, setShowDefaultDisplay] = React.useState("none");
+  const [showWelcome, setShowWelcome] = React.useState("flex");
+
+  const [severityFilter, setSeverityFilter] = React.useState("all");
   const [all, setAll] = React.useState(0);
   const [critical, setCritical] = React.useState(0);
   const [high, setHigh] = React.useState(0);
   const [medium, setMedium] = React.useState(0);
-  const [fixedOnly, setFixedOnly] = React.useState(true);
-  const [SBOMOutput, setSBOMOutput] = React.useState<boolean>(false);
-  const [SBOMContent, setSBOMContent] = React.useState("");
   const [low, setLow] = React.useState(0);
   const [unknown, setUnknown] = React.useState(0);
-  const [showFilter, setShowFilter] = React.useState("none");
-  const [showSuccess, setShowSuccess] = React.useState("none");
-  const [showDefaultDisplay, setShowDefaultDisplay] = React.useState("none");
-  const [showSBOM, setShowSBOM] = React.useState("none");
-  const [showWelcome, setShowWelcome] = React.useState("flex");
+
   const [vulnerabilities, setVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
   const [allVulnerabilities, setAllVulnerabilities] = React.useState<TrivyVulnerability[]>([]);
+
   const [loadingWait, setLoadingWait] = React.useState(false);
-  const [severityFilter, setSeverityFilter] = React.useState("all");
+  const [loggedIn, setLoggedIn] = React.useState(false);
+
 
 
   const getSeverityOrdering = (severity: string): number => {
@@ -106,11 +122,21 @@ export function App() {
       "-v",
       "/var/run/docker.sock:/var/run/docker.sock",
       "-v",
-      "trivy-docker-extension-cache:/root/.cache",
-      "aquasec/trivy",
-      "--quiet"
+      "trivy-docker-extension-cache:/root/.cache"
     ];
 
+    if (uploadAqua && !SBOMOutput) {
+      commandParts.push("-e");
+      commandParts.push("TRIVY_RUN_AS_PLUGIN=aqua");
+      commandParts.push("-e");
+      commandParts.push("AQUA_KEY=" + aquaKey);
+      commandParts.push("-e");
+      commandParts.push("AQUA_SECRET=" + aquaSecret);
+    }
+
+
+    commandParts.push("aquasec/trivy");
+    commandParts.push("--quiet");
     if (SBOMOutput) {
       commandParts.push("sbom")
     } else {
@@ -126,6 +152,7 @@ export function App() {
   }
 
   async function runTrivy(commandParts: string[], stdout: string, stderr: string) {
+    Metric("scanStarted", { imageName: scanImage });
     await window.ddClient.docker.cli.exec(
       "run", commandParts,
       {
@@ -147,6 +174,11 @@ export function App() {
             setDisableScan(false);
             var res = { stdout: stdout, stderr: stderr };
             if (exitCode === 0) {
+              if (uploadAqua && !SBOMOutput) {
+                window.ddClient.desktopUI.toast.success(
+                  `Results successfully uploaded to Aqua`
+                );
+              }
               processResult(res);
             } else {
               window.ddClient.desktopUI.toast.error(
@@ -167,7 +199,14 @@ export function App() {
       return;
     }
 
-    var results = JSON.parse(res.stdout);
+    let output = res.stdout;
+
+    if (uploadAqua) {
+      output = output.slice(output.indexOf('{'));
+    }
+
+    console.log(output);
+    var results = JSON.parse(output);
 
     if (SBOMOutput) {
       setShowSBOM("block");
@@ -282,13 +321,47 @@ export function App() {
     resetUI();
   }
 
+  React.useEffect(() => {
+    if (aquaKey !== "" && aquaSecret !== "") {
+      setShowUploadAqua("");
+    } else {
+      setShowUploadAqua("none");
+    }
+  }, [aquaKey, aquaSecret]);
+
+  React.useEffect(() => {
+    window.ddClient.extension.vm.service.get("/credentials").then((value: any) => {
+      setAquaKey(value.aqua_key);
+      setAquaSecret(value.aqua_secret);
+
+      if (value.aqua_key !== "" && value.aqua_secret !== "") {
+        setLoggedIn(true);
+      }
+
+    }).catch((err: any) => {
+      console.log(err);
+    });
+  }, []);
+
+  React.useEffect(() => {
+    Metric("extensionStarted", {})
+  }, []);
 
   return (
     <DockerMuiThemeProvider>
       <div>
         <CssBaseline />
         {/* Entry point to the extension - large hero with description and scan box */}
-        <ConfigureCreds sx={{ float: 'right' }} />
+        <ConfigureCreds sx={{ float: 'right' }}
+          open={showLoginBox}
+          setOpen={setShowLoginBox}
+          aquaKey={aquaKey}
+          setAquaKey={setAquaKey}
+          aquaSecret={aquaSecret}
+          setAquaSecret={setAquaSecret}
+          loggedIn={loggedIn}
+          setLoggedIn={setLoggedIn}
+        />
         <Box sx={{ clear: 'both' }}>
           <Welcome
             showWelcome={showWelcome}
@@ -302,6 +375,11 @@ export function App() {
             setSBOMOutput={setSBOMOutput}
             runScan={runScan}
             imageUpdated={imageUpdated}
+            uploadAqua={uploadAqua}
+            setUploadAqua={setUploadAqua}
+            showUploadAqua={showUploadAqua}
+            openLogin={setShowLoginBox}
+            loggedIn={loggedIn}
           />
           {/* Top level interaction point - hidden when the welcome screen is displayed */}
           <DefaultDisplay
@@ -316,6 +394,9 @@ export function App() {
             setSBOMOutput={setSBOMOutput}
             runScan={runScan}
             imageUpdated={imageUpdated}
+            uploadAqua={uploadAqua}
+            setUploadAqua={setUploadAqua}
+            showUploadAqua={showUploadAqua}
           />
           <SBOM
             SBOMContent={SBOMContent}

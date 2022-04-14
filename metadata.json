@@ -5,7 +5,7 @@
     "vm": {
         "composefile": "docker-compose.yaml",
         "exposes": {
-            "socket": "trivy-aqua-creds.sock"
+            "socket": "plugin-trivy.sock"
         }
     },
     "ui": {
@@ -14,7 +14,7 @@
             "root": "/ui",
             "src": "index.html",
             "backend": {
-                "socket": "trivy-aqua-creds.sock"
+                "socket": "plugin-trivy.sock"
             }
         }
     }

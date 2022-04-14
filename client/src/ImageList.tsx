@@ -85,6 +85,13 @@ export function ImageList(props: any) {
     }
 
     React.useEffect(() => {
+        if (props.scanImage !== "") {
+            props.runScan();
+        }
+    }, [props.fixedOnly]);
+
+
+    React.useEffect(() => {
         if (scanTriggered && !props.SBOMOutput && props.scanImage !== "") {
             props.runScan();
             setScanTriggered(false);
@@ -95,6 +102,11 @@ export function ImageList(props: any) {
         props.imageUpdated();
         props.setFixedOnly(!props.fixedOnly);
     }
+
+    const toggleUploadAqua = () => {
+        props.setUploadAqua(!props.uploadAqua);
+    }
+
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         props.setDisableScan(false);
         switch (event.key) {
@@ -164,7 +176,8 @@ export function ImageList(props: any) {
                 </Button>
             </Box>
             <FormGroup row sx={{ display: 'flex' }}>
-                <FormControlLabel control={<Switch checked={props.fixedOnly} onClick={toggleFixedOnly} />} label="Only show vulnerabilities that have fixes" />
+                <FormControlLabel control={<Switch checked={props.fixedOnly} onClick={toggleFixedOnly} />} label="Only show fixed vulnerabilities" />
+                <FormControlLabel sx={{ display: props.showUploadAqua }} control={<Switch checked={props.uploadAqua} onClick={toggleUploadAqua} />} label="Upload results" />
             </FormGroup>
         </Box>
     );

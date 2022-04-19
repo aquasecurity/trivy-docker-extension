@@ -11,9 +11,7 @@ import { Success } from './Success';
 import { TrivyVulnerability } from './TrivyVulnerability';
 import { Vulns } from './Vulns';
 import { Welcome } from './Welcome';
-import ReactGA from 'react-ga';
-import { Metric } from './Metrics';
-ReactGA.initialize('UA-226030090-1');
+import { SendMetric } from './Metrics';
 
 
 export function App() {
@@ -152,7 +150,7 @@ export function App() {
   }
 
   async function runTrivy(commandParts: string[], stdout: string, stderr: string) {
-    Metric("scanStarted", { imageName: scanImage });
+    SendMetric("trivy_scan_initiated", { imageName: scanImage });
     await window.ddClient.docker.cli.exec(
       "run", commandParts,
       {
@@ -179,8 +177,10 @@ export function App() {
                   `Results successfully uploaded to Aqua`
                 );
               }
+              SendMetric("trivy_scan_succeeded", { imageName: scanImage });
               processResult(res);
             } else {
+              SendMetric("trivy_scan_failed", { imageName: scanImage });
               window.ddClient.desktopUI.toast.error(
                 `An error occurred while scanning ${scanImage}: ${res.stderr}`
               );
@@ -333,19 +333,15 @@ export function App() {
     window.ddClient.extension.vm.service.get("/credentials").then((value: any) => {
       setAquaKey(value.aqua_key);
       setAquaSecret(value.aqua_secret);
-
       if (value.aqua_key !== "" && value.aqua_secret !== "") {
         setLoggedIn(true);
       }
-
     }).catch((err: any) => {
       console.log(err);
     });
+    SendMetric("trivy_extension_opened", {});
   }, []);
 
-  React.useEffect(() => {
-    Metric("extensionStarted", {})
-  }, []);
 
   return (
     <DockerMuiThemeProvider>

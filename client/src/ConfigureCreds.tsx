@@ -1,5 +1,4 @@
 
-import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,8 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Typography } from '@mui/material';
-import { Metric } from './Metrics';
+import { SendMetric } from './Metrics';
 
 export function ConfigureCreds(props: any) {
 
@@ -32,7 +30,7 @@ export function ConfigureCreds(props: any) {
                 window.ddClient.desktopUI.toast.success(
                     `Successfully logged in`
                 );
-                Metric("LoginSucceeded", { aquaKey: props.aquaKey });
+                SendMetric("trivy_aqua_login_successful", { aquaKey: props.aquaKey });
                 props.setLoggedIn(true);
                 props.setOpen(false);
             })
@@ -40,6 +38,7 @@ export function ConfigureCreds(props: any) {
                 window.ddClient.desktopUI.toast.error(
                     `Failed to validate login credentials`
                 );
+                SendMetric("trivy_aqua_login_failed", { aquaKey: props.aquaKey });
                 props.setAquaKey("");
                 props.setAquaSecret("");
                 console.log(error);

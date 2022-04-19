@@ -1,15 +1,19 @@
-import { Card, CardContent, Typography, CardActions, Button } from "@mui/material";
+import { Card, CardContent, Typography, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import { ImageList } from './ImageList';
 
 
 export function Welcome(props: any) {
+    let showLoginHelp = props.loggedIn ? 'none' : 'flex';
+
     const goToTrivy = () => {
         window.ddClient.host.openExternal("https://trivy.dev")
     }
 
     return (
-        <Box flexDirection='column' alignItems="center" sx={{ minWidth: 275, m: '4rem', flexDirection: "column", display: props.showWelcome, justifyContent: 'center' }}>
+        <Box flexDirection='column' alignItems="center" sx={{
+            minWidth: 275, m: '4rem', flexDirection: "column", display: props.showWelcome, justifyContent: 'center', alignItems: "center"
+        }}>
             <Box sx={{ display: 'flex' }}>
                 <img src="images/trivy_logo.svg" alt="Trivy Logo" height="160px" />
                 <Box sx={{ marginLeft: '0.8rem', marginTop: '1.8rem' }}>
@@ -43,14 +47,24 @@ export function Welcome(props: any) {
                     setFixedOnly={props.setFixedOnly}
                     SBOMOutput={props.SBOMOutput}
                     setSBOMOutput={props.setSBOMOutput}
+                    uploadAqua={props.uploadAqua}
+                    setUploadAqua={props.setUploadAqua}
+                    showUploadAqua={props.showUploadAqua}
                     textAlign='center'
                 />
             </Box>
             <Box width='50%' minWidth='400px' maxWidth='700px' marginTop='2.5rem'>
                 <Card sx={{ display: 'flex', p: '2rem', justifyContent: 'center' }}>
-                    <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Typography variant="h6" marginTop='5px' marginRight='20px' >New to Trivy?   </Typography>
-                        <Button onClick={goToTrivy}><Typography variant="h6">Learn more...</Typography></Button>
+                    <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Typography variant="h6" marginTop='6px' marginRight='20px' >New to Trivy?
+                                <Button sx={{ fontSize: '12pt', marginTop: '-2px' }} onClick={() => { goToTrivy }}>Learn more...</Button></Typography>
+
+                        </Box>
+                        <Box sx={{ display: showLoginHelp, justifyContent: 'center' }}>
+                            <Typography variant="h6" marginTop='6px' marginRight='20px' >Aqua Customer?
+                                <Button sx={{ fontSize: '12pt', marginTop: '-2px' }} onClick={() => { props.openLogin(true) }}>Sign in</Button></Typography>
+                        </Box>
                     </CardContent>
                 </Card>
             </Box>

@@ -1,0 +1,13 @@
+version: '3'
+
+volumes:
+  trivy_aqua_creds:
+
+services:
+  app:
+    image: ${DESKTOP_PLUGIN_IMAGE}
+    cap_add:
+    - DAC_OVERRIDE
+    - FOWNER
+    volumes:
+      - trivy_aqua_creds:/creds

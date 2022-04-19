@@ -35,6 +35,9 @@ export function DefaultDisplay(props: any) {
                     setFixedOnly={props.setFixedOnly}
                     SBOMOutput={props.SBOMOutput}
                     setSBOMOutput={props.setSBOMOutput}
+                    uploadAqua={props.uploadAqua}
+                    setUploadAqua={props.setUploadAqua}
+                    showUploadAqua={props.showUploadAqua}
                 />
             </Box>
         </Box>)

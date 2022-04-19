@@ -2,11 +2,20 @@
     "name": "Trivy",
     "provider": "Aqua Security",
     "icon": "trivy.svg",
+    "vm": {
+        "composefile": "docker-compose.yaml",
+        "exposes": {
+            "socket": "plugin-trivy.sock"
+        }
+    },
     "ui": {
         "dashboard-tab": {
             "title": "Trivy",
             "root": "/ui",
-            "src": "index.html"
+            "src": "index.html",
+            "backend": {
+                "socket": "plugin-trivy.sock"
+            }
         }
     }
 }

@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "trivy-dd-metrics-app"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-f3mesdo1r0b1"
+s3_prefix = "trivy-dd-metrics-app"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

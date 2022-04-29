@@ -18,8 +18,6 @@ func handleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 	measurementID := os.Getenv("MEASUREMENT_ID")
 	secretKey := os.Getenv("API_SECRET")
 
-	log.Default().Printf("Event body: %#v", request.Body)
-
 	requestUrl := fmt.Sprintf("https://www.google-analytics.com/mp/collect?measurement_id=%s&api_secret=%s", measurementID, secretKey)
 	req, err := http.NewRequest(http.MethodPost, requestUrl, strings.NewReader(request.Body))
 	if err != nil {
@@ -28,7 +26,12 @@ func handleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		log.Default().Fatal(err)
 		return apiResponse, err
+	}
+
+	if resp.StatusCode != http.StatusNoContent {
+		log.Default().Printf("Status code for %s is %d", request.Body, resp.StatusCode)
 	}
 
 	apiResponse.StatusCode = resp.StatusCode

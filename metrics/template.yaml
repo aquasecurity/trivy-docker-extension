@@ -44,7 +44,7 @@ Resources:
 Outputs:
   TrivyDDMetricsAPI:
     Description: "API Gateway endpoint URL for Trivy Docker Desktop Metric Gathering"
-    Value: !Sub "https://${TrivyAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/ddcapture/"
+    Value: !Sub "https://${TrivyAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/ddCapture/"
   TrivyDDFunction:
     Description: "Trivy Docker Metrics Function"
     Value: !GetAtt TrivyDDMetricFunction.Arn

@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'trivy-dd-metrics
+
+  '
+Globals:
+  Function:
+    Timeout: 5
+Resources:
+  TrivyAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Cors:
+        AllowMethods: '''POST'''
+        AllowOrigin: '''*'''
+      OpenApiVersion: '2.0'
+      Auth:
+        ApiKeyRequired: false
+  TrivyDDMetricFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: Trivy_DockerDesktop_Metrics
+      CodeUri: TrivyDDMetricFunction
+      Handler: trivy-dd-metrics
+      Runtime: go1.x
+      Architectures:
+      - x86_64
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /ddCapture
+            Method: POST
+            RestApiId:
+              Ref: TrivyAPI
+      Environment:
+        Variables:
+          MEASUREMENT_ID: VALUE
+          API_SECRET: VALUE
+    Metadata:
+      SamResourceId: TrivyDDMetricFunction
+Outputs:
+  TrivyDDMetricsAPI:
+    Description: API Gateway endpoint URL for Trivy Docker Desktop Metric Gathering
+    Value:
+      Fn::Sub: https://${TrivyAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/ddcapture/
+  TrivyDDFunction:
+    Description: Trivy Docker Metrics Function
+    Value:
+      Fn::GetAtt:
+      - TrivyDDMetricFunction
+      - Arn
+  TrivyDDFunctionIamRole:
+    Description: Implicit IAM Role created for Trivy DD Function
+    Value:
+      Fn::GetAtt:
+      - TrivyDDMetricFunctionRole
+      - Arn

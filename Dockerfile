@@ -23,8 +23,8 @@ RUN make bin
 
 # Bring it all together
 FROM alpine:3.15
-LABEL org.opencontainers.image.title="Trivy" \
-    org.opencontainers.image.description="Run unlimited vulnerability scans against remote or locally stored images." \
+LABEL org.opencontainers.image.title="Trivy Vulnerability Scanner" \
+    org.opencontainers.image.description="Run unlimited vulnerability scans against remote or locally stored images. Understand any security issues that may be present in images before you pull and use them." \
     org.opencontainers.image.vendor="Aqua Security Software" \
     com.docker.desktop.extension.api.version=">= 0.2.0" \
     com.docker.desktop.extension.icon="https://raw.githubusercontent.com/aquasecurity/trivy-docker-extension/main/trivy.svg" \

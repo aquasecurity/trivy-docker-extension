@@ -1,5 +1,5 @@
 {
-    "name": "Trivy",
+    "name": "Aqua Trivy",
     "provider": "Aqua Security",
     "icon": "trivy.svg",
     "vm": {

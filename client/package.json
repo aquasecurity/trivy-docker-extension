@@ -7,7 +7,7 @@
     "build": "react-scripts build"
   },
   "dependencies": {
-    "@docker/docker-mui-theme": "^0.0.4",
+    "@docker/docker-mui-theme": "^0.0.6",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.5.1",

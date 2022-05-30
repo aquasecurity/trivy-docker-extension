@@ -99,6 +99,11 @@ export function App() {
   }
 
   async function triggerTrivy() {
+    if (scanImage === "") {
+      return;
+    }
+
+
     resetUI();
     if (!(await checkForCacheVolume())) {
       await createCacheVolume().then((created) => {

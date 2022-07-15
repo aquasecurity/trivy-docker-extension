@@ -58,7 +58,7 @@ export function Welcome(props: any) {
                     <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Typography variant="h6" marginTop='6px' marginRight='20px' >New to Trivy?
-                                <Button sx={{ fontSize: '12pt', marginTop: '-2px' }} onClick={() => { goToTrivy }}>Learn more...</Button></Typography>
+                                <Button sx={{ fontSize: '12pt', marginTop: '-2px' }} onClick={() => { goToTrivy() }}>Learn more...</Button></Typography>
 
                         </Box>
                         <Box sx={{ display: showLoginHelp, justifyContent: 'center' }}>

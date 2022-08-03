@@ -140,10 +140,10 @@ export function App() {
 
     commandParts.push("aquasec/trivy");
     commandParts.push("--quiet");
+    commandParts.push("image")
     if (SBOMOutput) {
-      commandParts.push("sbom")
+      commandParts.push("-f=cyclonedx")
     } else {
-      commandParts.push("image")
       commandParts.push("-f=json")
     }
 

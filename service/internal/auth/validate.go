@@ -19,12 +19,12 @@ type Response struct {
 	Errors  []string `json:"errors,omitempty"`
 }
 
-const cspmUrl = "https://api.cloudsploit.com/v2/tokens"
+const cspmTokenExchangePath = "/v2/tokens"
 
-func ValidateCredentials(key, secret string) (string, error) {
+func ValidateCredentials(key, secret, cspmUrl string) (string, error) {
 	body := `{"validity":30,"allowed_endpoints":["ANY:v2/build/twirp/buildsecurity.BuildSecurity/*"]}`
 
-	req, err := http.NewRequest("POST", cspmUrl, bytes.NewBuffer([]byte(body)))
+	req, err := http.NewRequest("POST", cspmUrl+cspmTokenExchangePath, bytes.NewBuffer([]byte(body)))
 	if err != nil {
 		return "", err
 	}

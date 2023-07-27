@@ -23,7 +23,7 @@ export function ConfigureCreds(props: any) {
     };
 
     const handleSaveDetails = () => {
-        let payload = { aqua_key: props.aquaKey, aqua_secret: props.aquaSecret };
+        let payload = { aqua_key: props.aquaKey, aqua_secret: props.aquaSecret, aqua_cspm_url: props.aquaCSPMUrl };
         console.log(payload);
         window.ddClient.extension.vm.service.request({ url: "/credentials", method: "POST", headers: { 'Content-Type': 'application/json' }, data: payload })
             .then(() => {
@@ -41,6 +41,7 @@ export function ConfigureCreds(props: any) {
                 SendMetric("trivy_aqua_login_failed", { aquaKey: props.aquaKey });
                 props.setAquaKey("");
                 props.setAquaSecret("");
+                props.setAquaCSPMUrl("");
                 console.log(error);
             });
     };
@@ -48,6 +49,7 @@ export function ConfigureCreds(props: any) {
     const handleSignOutClick = () => {
         props.setAquaKey("");
         props.setAquaSecret("");
+        props.setAquaCSPMUrl("");
         props.setLoggedIn(false);
 
         let payload = { aqua_key: "", aqua_secret: "" };
@@ -94,7 +96,7 @@ export function ConfigureCreds(props: any) {
                         onChange={(e) => props.setAquaKey(e.target.value)}
                         fullWidth
                         variant="standard"
-                        helperText="AQUA_KEY provided in you CSPM account"
+                        helperText="AQUA_KEY provided in your CSPM account"
                     />
                     <TextField
                         margin="dense"
@@ -105,8 +107,19 @@ export function ConfigureCreds(props: any) {
                         onChange={(e) => props.setAquaSecret(e.target.value)}
                         fullWidth
                         variant="standard"
-                        helperText="AQUA_SECRET provided in you CSPM account"
+                        helperText="AQUA_SECRET provided in your CSPM account"
                     />
+                  <TextField
+                    margin="dense"
+                    id="aquaCSPMUrl"
+                    label="Aqua CSPM Url"
+                    type="text"
+                    value={props.aquaCSPMUrl}
+                    onChange={(e) => props.setAquaCSPMUrl(e.target.value)}
+                    fullWidth
+                    variant="standard"
+                    helperText="AQUA_CSPM_URL provided in your CSPM account"
+                  />
 
                 </DialogContent>
                 <DialogActions>

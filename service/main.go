@@ -18,8 +18,9 @@ import (
 const credsFile = "/creds/.aqua"
 
 type Credentials struct {
-	AquaKey    string `json:"aqua_key"`
-	AquaSecret string `json:"aqua_secret"`
+	AquaKey     string `json:"aqua_key"`
+	AquaSecret  string `json:"aqua_secret"`
+	AquaCSPMUrl string `json:"aqua_cspm_url"`
 }
 
 func main() {
@@ -66,7 +67,7 @@ func writeCredentials(ctx echo.Context) error {
 	if err := ctx.Bind(creds); err != nil {
 		return internalError(ctx, err)
 	}
-	validated, err := auth.ValidateCredentials(creds.AquaKey, creds.AquaSecret)
+	validated, err := auth.ValidateCredentials(creds.AquaKey, creds.AquaSecret, creds.AquaCSPMUrl)
 	if err != nil || validated == "" {
 		return internalError(ctx, err)
 	}

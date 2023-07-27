@@ -17,6 +17,7 @@ import { SendMetric } from './Metrics';
 export function App() {
   const [aquaKey, setAquaKey] = React.useState("");
   const [aquaSecret, setAquaSecret] = React.useState("");
+  const [aquaCSPMUrl, setAquaCSPMUrl] = React.useState("");
 
   const [scanImage, setScanImage] = React.useState("");
   const [disableScan, setDisableScan] = React.useState(true);
@@ -135,6 +136,8 @@ export function App() {
       commandParts.push("AQUA_KEY=" + aquaKey);
       commandParts.push("-e");
       commandParts.push("AQUA_SECRET=" + aquaSecret);
+      commandParts.push("-e");
+      commandParts.push("CSPM_URL=" + aquaCSPMUrl);
     }
 
 
@@ -338,7 +341,8 @@ export function App() {
     window.ddClient.extension.vm.service.get("/credentials").then((value: any) => {
       setAquaKey(value.aqua_key);
       setAquaSecret(value.aqua_secret);
-      if (value.aqua_key !== "" && value.aqua_secret !== "") {
+      setAquaCSPMUrl(value.aqua_cspm_url);
+      if (value.aqua_key !== "" && value.aqua_secret !== "" && value.aqua_cspm_url !== "") {
         setLoggedIn(true);
       }
     }).catch((err: any) => {
@@ -360,6 +364,8 @@ export function App() {
           setAquaKey={setAquaKey}
           aquaSecret={aquaSecret}
           setAquaSecret={setAquaSecret}
+          aquaCSPMUrl={aquaCSPMUrl}
+          setAquaCSPMUrl={setAquaCSPMUrl}
           loggedIn={loggedIn}
           setLoggedIn={setLoggedIn}
         />
